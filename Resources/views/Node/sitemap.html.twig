@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="large-6 column">
+    <ul class="coral-tree sortable">
+      <li>
+        <a
+          href="#"
+          rel="{{ root.id }}"
+          {% if node.id == root.id %}class="active"{% endif %}
+        >
+          <span
+            rel="edit"
+            data-url="{{ path('list_node', {'id': root.id }) }}"
+            >{{ root.name }}</span>
+        </a>
+        {% if root.items %}
+          <ul>
+            {{ include('CoralSiteBundle:Node:sitemap_node.html.twig', { 'items': root.items, 'active_node': node }) }}
+          </ul>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+  <div class="large-6 column">
+    <p class="lead">Edit {{ node.name }}</p>
+
+    {{ form(form) }}
+  </div>
+</div>

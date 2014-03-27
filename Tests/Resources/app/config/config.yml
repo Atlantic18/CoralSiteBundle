@@ -1,0 +1,47 @@
+framework:
+    secret: test
+    test: ~
+    session:
+        storage_id: session.storage.filesystem
+    form:            true
+    csrf_protection: true
+    validation:
+        enabled: true
+        enable_annotations: true
+    router:
+        resource: %kernel.root_dir%/config/routing.php
+    default_locale: "en"
+
+services:
+    kernel.listener.core_bundle_exception_listener:
+        class: Coral\CoreBundle\Service\JsonExceptionService
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+        arguments:
+            - @logger
+    kernel.listener.core_bundle_authentication_listener:
+        class: Coral\CoreBundle\Service\JsonAuthenticationService
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+    # Doctrine Extension listeners to handle behaviors
+    gedmo.listener.tree:
+        class: Gedmo\Tree\TreeListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
+
+monolog:
+    handlers:
+        main:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+
+doctrine:
+    dbal:
+        driver: pdo_sqlite
+        path:   %kernel.root_dir%/cache/database.%kernel.environment%.sqlite
+    orm:
+        auto_generate_proxy_classes: true
+        auto_mapping: true

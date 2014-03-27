@@ -1,0 +1,109 @@
+{% if is_granted("ROLE_ADMIN") %}
+  <section class="coral-bar">
+    <div class="row">
+      <div class="large-3 columns">
+        <div class="upload" rel="uploadWindow">
+          <i class="fi-upload-cloud"></i><p>Place a new file here</p>
+          <input type="file" />
+        </div>
+      </div>
+      <div class="large-6 columns">
+        <table width="100%">
+          <tbody>
+            {% for key, attribute in node %}
+              {% if not (attribute is iterable) %}
+                <tr>
+                  <th>{{ key }}</th>
+                  <td>{{ attribute }}</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+        <ul class="button-group radius">
+          <li><a href="#" class="button tiny secondary"><i class="fi-photo"></i> {{ 'Gallery'|trans }}</a></li>
+          <li><a href="#" rel="nodeSettings" class="button tiny secondary"><i class="fi-widget"></i> {{ 'Settings'|trans }}</a></li>
+          <li><a href="#" class="button tiny secondary"><i class="fi-megaphone"></i> {{ 'Translations'|trans }}</a></li>
+          <li><a href="#" class="button tiny secondary"><i class="fi-calendar"></i> {{ 'Changes'|trans }}</a></li>
+        </ul>
+      </div>
+      <div class="large-3 columns">
+        <ul class="button-group radius right" style="margin-top: 1em">
+          <li>
+            <a
+              href="{{ path('delete_node', { 'id': node.id }) }}"
+              class="button small secondary"
+              confirm="{{ "Are you sure you want to delete this node?"|trans }}"
+            ><i class="fi-trash"></i> {{ 'Delete'|trans }}</a>
+          </li>
+          {% if (edit is defined) and (edit) %}
+            <li>
+              <a
+                href="{{ path('publish_node', { 'slug': node.slug, 'id': node.id }) }}"
+                confirm="{{ "Are you sure you want to publish this node?"|trans }}"
+                class="button small success"><i class="fi-page-export"></i> {{ 'Publish'|trans }}</a>
+            </li>
+          {% else %}
+            <li>
+              <a
+                href="{{ path('edit_node', { 'slug': node.slug }) }}"
+                class="button small success"><i class="fi-page-edit"></i> {{ 'Edit'|trans }}</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div
+      id="nodeSettings"
+      class="coral-modal inactive"
+      rel="{{ path('list_nodes') }}"
+      title="{{ 'Node list'|trans }}">
+        <ul>
+          <li><a href="#" class="cancel secondary"><i class="fi-x"></i> {{ 'Cancel'|trans }}</a></li>
+          <li><a href="#" class="success"><i class="fi-check"></i> {{ 'Save'|trans }}</a></li>
+        </ul>
+    </div>
+
+    <div
+      id="uploadWindow"
+      class="coral-modal inactive"
+      rel="{{ path('file_upload', { 'slug': node.slug }) }}"
+      title="{{ 'Uploaded file'|trans }}">
+        <ul>
+          <li><a href="#" class="cancel secondary"><i class="fi-x"></i> {{ 'Close'|trans }}</a></li>
+        </ul>
+    </div>
+  </section>
+
+  {% stylesheets
+    "@CoralSiteBundle/Resources/assets/codemirror/codemirror.css"
+    "@CoralSiteBundle/Resources/assets/codemirror/monokai.css"
+    "@CoralSiteBundle/Resources/assets/scss/coral.scss"
+    "@CoralSiteBundle/Resources/assets/aloha/aloha.css"
+  %}
+      <link rel="stylesheet" href="{{ asset_url }}" />
+  {% endstylesheets %}
+
+  {% javascripts
+      '@CoralSiteBundle/Resources/assets/aloha/aloha-full.js'
+  %}
+    <script
+      type="text/javascript"
+      src="{{ asset_url }}"
+      data-aloha-plugins="common/ui,common/format,common/link,common/list,common/align"></script>
+  {% endjavascripts %}
+
+  {% javascripts
+      '@CoralSiteBundle/Resources/assets/externs/jquery-sortable.js'
+      '@CoralSiteBundle/Resources/assets/codemirror/codemirror.js'
+      '@CoralSiteBundle/Resources/assets/codemirror/addon/edit/continuelist.js'
+      '@CoralSiteBundle/Resources/assets/codemirror/addon/selection/active-line.js'
+      '@CoralSiteBundle/Resources/assets/codemirror/xml.js'
+      '@CoralSiteBundle/Resources/assets/codemirror/markdown.js'
+      '@CoralSiteBundle/Resources/assets/codemirror/javascript.js'
+      '@CoralSiteBundle/Resources/assets/markdown/markdown.js'
+      '@CoralSiteBundle/Resources/assets/coffee/coral.coffee'
+  %}
+      <script type="text/javascript" src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+{% endif %}

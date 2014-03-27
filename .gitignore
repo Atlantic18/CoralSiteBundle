@@ -1,13 +1,8 @@
-# Bootstrap
-app/bootstrap*
-
-# Symfony directories
-vendor/*
-*/logs/*
-*/cache/*
-web/uploads/*
-web/bundles/*
-
-# Configuration files
-app/config/parameters.ini
-app/config/parameters.yml
+Tests/Resources/app/cache
+Tests/Resources/app/logs
+composer.lock
+composer.phar
+vendor
+phpunit.xml
+nbproject
+catalog.xml

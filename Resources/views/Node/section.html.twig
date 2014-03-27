@@ -1,0 +1,61 @@
+{% for section in node.sections %}
+  {% if name == section.name %}
+    {% for content in section.items %}
+      {% if (edit is defined) and (edit) %}
+        <div
+          class="coral-widget"
+          id="{{ content.permid }}"
+          coral-renderer="{{ content.renderer }}"
+          unselectable='on'
+          onselectstart='return false;'
+          onmousedown='return false;'
+        >
+          <div class="coral-editable">
+            <i class="fi-page-edit"></i> {{ "Content area"|trans }}
+          </div>
+          <div class="coral-content">
+            {{ content.content|coral(content.renderer) }}
+          </div>
+          <textarea>{{ content.content|escape }}</textarea>
+          <div class="coral-controls">
+            <a
+              href="{{ path('content_move_up', { 'slug': node.slug, 'permid': content.permid }) }}"
+              rel="move-up"
+              title="{{ "Move content up"|trans }}"
+              ><i class="fi-arrow-up"></i></a>
+            <a
+              href="{{ path('content_update', { 'slug': node.slug, 'permid': content.permid }) }}"
+              rel="edit"
+              title="{{ "Edit content"|trans }}"
+              ><i class="fi-page-edit"></i></a>
+            <a
+              href="#"
+              rel="add"
+              title="{{ "Add new content"|trans }}"
+              data-dropdown="contentadd{{ content.permid }}"
+              data-options="is_hover:true"
+              ><i class="fi-page-add"></i></a>
+            <a
+              href="{{ path('content_delete', { 'slug': node.slug, 'permid': content.permid }) }}"
+              confirm="{{ "Are you sure you want to delete this content?"|trans }}"
+              rel="delete"
+              title="{{ "Delete content"|trans }}"
+              ><i class="fi-trash"></i></a>
+            <a
+              href="{{ path('content_move_down', { 'slug': node.slug, 'permid': content.permid }) }}"
+              rel="move-down"
+              title="{{ "Move content down"|trans }}"
+              ><i class="fi-arrow-down"></i></a>
+          </div>
+        </div>
+        <ul id="contentadd{{ content.permid }}" data-dropdown-content class="tiny f-dropdown content">
+          <li><a href="{{ path('content_add_after', { 'slug': node.slug, 'id': node.id, 'permid': content.permid, 'renderer': "markdown" }) }}">Markdown</a></li>
+          <li><a href="{{ path('content_add_after', { 'slug': node.slug, 'id': node.id, 'permid': content.permid, 'renderer': "html" }) }}">Rich text</a></li>
+          <li><a href="{{ path('content_add_after', { 'slug': node.slug, 'id': node.id, 'permid': content.permid, 'renderer': "json" }) }}">JSON</a></li>
+        </ul>
+      {% else %}
+        {{ content.content|coral(content.renderer) }}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}

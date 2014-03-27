@@ -1,0 +1,19 @@
+{% for node in items %}
+  {% if (not ('tree_permission' in node|keys)) or is_granted(node.tree_permission)  %}
+    <li
+    {% if (not (active_node is empty)) and (active_node.id == node.id) %}class="active"{% endif %}
+    >
+    <a href="{{ path('node', {'slug': node.slug}) }}">{{ node.name }}</a>
+
+    {% if ('items' in node|keys) and (max_level > 0)  %}
+      <ul>
+      {% if not (active_node is empty) %}
+        {{ include('CoralSiteBundle:Menu:root.html.twig', { 'items': node.items, 'max_level': max_level - 1, 'active_node': active_node }) }}
+      {% else %}
+        {{ include('CoralSiteBundle:Menu:root.html.twig', { 'items': node.items, 'max_level': max_level - 1 }) }}
+      {% endif %}
+      </ul>
+    {% endif %}
+    </li>
+  {% endif %}
+{% endfor %}

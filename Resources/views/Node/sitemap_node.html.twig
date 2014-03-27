@@ -1,0 +1,36 @@
+{% for node in items %}
+  <li>
+    <a
+      href="#"
+      rel="{{ node.id }}"
+      data-before="{{ path('move_node', {'id_what': node.id, 'position': 'before', 'id_where': 0}) }}"
+      data-after="{{ path('move_node', {'id_what': node.id, 'position': 'after', 'id_where': 0}) }}"
+      {% if active_node.id == node.id %}class="active"{% endif %}
+    >
+      <i class="fi-list" rel="move"></i>
+      <span
+        rel="edit"
+        data-url="{{ path('list_node', {'id': node.id }) }}"
+        >{{ node.name }}</span>
+      <i
+        class="fi-x"
+        rel="delete"
+        data-url="{{ path('delete_node', {'id': node.id }) }}"
+        ></i>
+      <i
+        class="fi-page-add"
+        rel="add"
+        data-url="{{ path('add_node', {'id': node.id}) }}"></i>
+      <i
+        class="fi-indent-more"
+        rel="last-child-of"
+        data-last-child-of="{{ path('move_node', {'id_what': node.id, 'position': 'last-child-of', 'id_where': 0}) }}"></i>
+    </a>
+
+    {% if 'items' in node|keys  %}
+      <ul>
+        {{ include('CoralSiteBundle:Node:sitemap_node.html.twig', { 'items': node.items }) }}
+      </ul>
+    {% endif %}
+  </li>
+{% endfor %}
