@@ -10,7 +10,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="Symfony CoralCoreBundle Test Suite">
+        <testsuite name="Symfony CoralSiteBundle Test Suite">
             <directory suffix="Test.php">./Tests</directory>
         </testsuite>
     </testsuites>

@@ -2,7 +2,7 @@
 
 namespace Coral\SiteBundle\Service;
 
-use Coral\SiteBundle\Exception\CoralConnectException;
+use Coral\CoreBundle\Exception\CoralConnectException;
 use Coral\CoreBundle\Utility\JsonParser;
 
 class CoralConnectService
