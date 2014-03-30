@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Coral Site Bundle",
     "keywords": ["CMS", "Coral", "REST"],
-    "homepage": "https://github.com/Atlantic18/CoralContentBundle",
+    "homepage": "https://github.com/Atlantic18/CoralSiteBundle",
     "license": "MIT",
     "authors": [
         {
