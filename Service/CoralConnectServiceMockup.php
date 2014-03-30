@@ -19,7 +19,8 @@ class CoralConnectServiceMockup
         $controller = $this->container->get('request')->attributes->get('_controller');
         $controller = substr($controller, 0, strpos($controller, 'Bundle') + 6);
         $controller = str_replace('\\', '/', $controller);
-        $filePath   = $this->container->get('kernel')->getRootDir() . '/../src/' . $controller . '/Tests/coral_connect' . $uri;
+        //@TODO Fix: This will work only for tests running in CoralBundles file structure
+        $filePath   = $this->container->get('kernel')->getRootDir() . '/../coral_connect' . $uri;
 
         if(!file_exists($filePath))
         {
