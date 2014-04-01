@@ -290,7 +290,7 @@ class ContentEditor
       codemirror: null
       href: null
       activeWidget: null
-      aloha: null
+      isEditorActive: false
     @init()
     @initEditor()
 
@@ -304,11 +304,7 @@ class ContentEditor
       continueComments: "Enter"
       extraKeys:
         "Enter": "newlineAndIndentContinueMarkdownList"
-        "Esc": () =>
-          if @editor.codemirror.doc.isClean()
-            $(".coral-editor").hide()
-          else
-            @onExit()
+        "Esc": @discardChanges
       lineWrapping: true
       autofocus: true
 
@@ -334,8 +330,7 @@ class ContentEditor
       if confirm "All your changes will be lost!"
         $(".coral-editor").hide()
 
-  onExit: ()=>
-    @discardChanges()
+    @editor.isEditorActive = false
 
   onSuccessSave: ()=>
     @editor.activeWidget.find("textarea").val(@editor.codemirror.getValue())
@@ -355,12 +350,15 @@ class ContentEditor
 
   startEditor: (event) =>
     $(".coral-widget .coral-controls").hide()
-    linkElement   = event.target
+
+    @editor.isEditorActive = true
+
+    linkElement   = event.currentTarget
     widgetElement = $(linkElement).parents(".coral-widget").first()
     contentType   = widgetElement.attr "coral-renderer"
 
-    if(contentType == "markdown" || contentType == "json")
-      if $(widgetElement).find("textarea").length > 0
+    if $(widgetElement).find("textarea").length > 0
+      if(contentType == "markdown" || contentType == "json")
         @editor.activeWidget = widgetElement
         @editor.href = linkElement.href
         $(".coral-editor").show()
@@ -377,28 +375,60 @@ class ContentEditor
         @editor.codemirror.doc.markClean()
         @editor.codemirror.focus()
 
+      if(contentType == "html")
+        @editor.activeWidget = widgetElement.find(".coral-content").get(0)
+        @editor.href = linkElement.href
+        Aloha.jQuery(@editor.activeWidget).aloha()
+
     event.preventDefault()
     false
 
-  init: ()->
-    $(".coral-widget").click (e)->
-      $(".coral-widget[id!=" + this.id + "] .coral-controls").hide()
-      $(this).find(".coral-controls").toggle()
+  onAlohaBlur: ()=>
+    if @editor.isEditorActive
+      if Aloha.activeEditable.isModified()
+        if confirm "Do you want to save the changes?"
+          $.ajax
+            type: "POST"
+            url: @editor.href
+            data:
+              content: @editor.activeWidget.innerHTML
+              renderer: "html"
+            success: ()=>
+              @logger.info "Text saved."
+              @editor.isEditorActive = false
+              Aloha.jQuery(@editor.activeWidget).mahalo()
+            dataType: 'text'
+        else
+          @editor.activeWidget.innerHTML = $(@editor.activeWidget).next("textarea").val()
+          @editor.isEditorActive = false
+          Aloha.jQuery(@editor.activeWidget).mahalo()
+      else
+        @editor.isEditorActive = false
+        Aloha.jQuery(@editor.activeWidget).mahalo()
 
-      $(this).find(".coral-controls").css('top', e.pageY - $(this).offset().top - 40)
-    .dblclick ()->
-      $(this).find(".coral-controls a[rel=edit]").click()
+
+  init: ()=>
+    $(".coral-widget").click (e)=>
+      if !@editor.isEditorActive
+        coralWidget = e.currentTarget
+        $(".coral-widget[id!=" + coralWidget.id + "] .coral-controls").hide()
+        $(coralWidget).find(".coral-controls").toggle()
+        $(coralWidget).find(".coral-controls").css('top', e.pageY - $(coralWidget).offset().top - 40)
+    .dblclick (e)=>
+      if !@editor.isEditorActive
+        $(e.currentTarget).find(".coral-controls a[rel=edit]").click()
 
     $(".coral-widget .coral-content a")
       .click ()->
         false
       .dblclick ()->
-        $(this).parents(".coral-widget").find(".coral-controls a[rel=edit]").click()
         false
 
     $(".coral-widget .coral-controls a[rel=edit]").click @startEditor
     $(".coral-widget .coral-controls a[rel=add]").click ()->
       false
+
+    Aloha.bind "aloha-editable-deactivated", @onAlohaBlur
 
     return
 
@@ -432,6 +462,3 @@ $(document).ready ->
       false
 
   true
-
-Aloha.ready ->
-  Aloha.jQuery('.coral-content').aloha()

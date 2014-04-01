@@ -6,9 +6,11 @@
           class="coral-widget"
           id="{{ content.permid }}"
           coral-renderer="{{ content.renderer }}"
-          unselectable='on'
-          onselectstart='return false;'
-          onmousedown='return false;'
+          {% if (content.renderer != 'html') %}
+            unselectable='on'
+            onselectstart='return false;'
+            onmousedown='return false;'
+          {% endif %}
         >
           <div class="coral-editable">
             <i class="fi-page-edit"></i> {{ "Content area"|trans }}
