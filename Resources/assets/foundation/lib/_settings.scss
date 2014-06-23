@@ -68,36 +68,77 @@
 // $shiny-edge-active-color: rgba(#000, .2);
 
 // Media Query Ranges
-// $small-range: (0em, 40em);
-// $medium-range: (40.063em, 64em);
-// $large-range: (64.063em, 90em);
-// $xlarge-range: (90.063em, 120em);
-// $xxlarge-range: (120.063em);
+//$small-range: (0em, 40em); /* 0, 640px */
+//$medium-range: (40.063em, 64em); /* 641px, 1024px */
+//$large-range: (64.063em, 90em); /* 1025px, 1440px */
+//$xlarge-range: (90.063em, 120em); /* 1441px, 1920px */
+//$xxlarge-range: (120.063em); /* 1921px */
 
-// $screen: "only screen";
+//$small-range: (0em, 40em); /* 0, 640px */
+//$medium-range: (40em, 40em); /* 641px, 642px */
+//$large-range: (40.0063em, 90em); /* 1025px, 1440px */
+//$xlarge-range: (90.063em, 120em); /* 1441px, 1920px */
+//$xxlarge-range: (120.063em); /* 1921px */
 
-// $landscape: "#{$screen} and (orientation: landscape)";
-// $portrait: "#{$screen} and (orientation: portrait)";
+ //$screen: "only screen";
 
-// $small-up: $screen;
-// $small-only: "#{$screen} and (max-width: #{upper-bound($small-range)})";
+ //$landscape: "#{$screen} and (orientation: landscape)";
+ //$portrait: "#{$screen} and (orientation: portrait)";
 
-// $medium-up: "#{$screen} and (min-width:#{lower-bound($medium-range)})";
-// $medium-only: "#{$screen} and (min-width:#{lower-bound($medium-range)}) and (max-width:#{upper-bound($medium-range)})";
+ //$small-up: $screen;
+ //$small-only: "#{$screen} and (max-width: #{upper-bound($small-range)})";
 
-// $large-up: "#{$screen} and (min-width:#{lower-bound($large-range)})";
-// $large-only: "#{$screen} and (min-width:#{lower-bound($large-range)}) and (max-width:#{upper-bound($large-range)})";
+ //$medium-up: "#{$screen} and (min-width:#{lower-bound($medium-range)})";
+ //$medium-only: "#{$screen} and (min-width:#{lower-bound($medium-range)}) and (max-width:#{upper-bound($medium-range)})";
 
-// $xlarge-up: "#{$screen} and (min-width:#{lower-bound($xlarge-range)})";
-// $xlarge-only: "#{$screen} and (min-width:#{lower-bound($xlarge-range)}) and (max-width:#{upper-bound($xlarge-range)})";
+ //$large-up: "#{$screen} and (min-width:#{lower-bound($large-range)})";
+ //$large-only: "#{$screen} and (min-width:#{lower-bound($large-range)}) and (max-width:#{upper-bound($large-range)})";
 
-// $xxlarge-up: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)})";
-// $xxlarge-only: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)}) and (max-width:#{upper-bound($xxlarge-range)})";
+ //$xlarge-up: "#{$screen} and (min-width:#{lower-bound($xlarge-range)})";
+ //$xlarge-only: "#{$screen} and (min-width:#{lower-bound($xlarge-range)}) and (max-width:#{upper-bound($xlarge-range)})";
+
+ //$xxlarge-up: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)})";
+ //$xxlarge-only: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)}) and (max-width:#{upper-bound($xxlarge-range)})";
 
 // Legacy
 // $small: $medium-up;
 // $medium: $medium-up;
 // $large: $large-up;
+
+/* ============================================ H A C K ============================= 
+ * timto se vypina foundation spolu s combinaci v css html { min-width: 1024; }
+ * je to tu ted proto, aby se pro skipper a pulpo neuseli delat druhy stranky v mobilni verzi, ale aby misto toho slo 
+ * normalne scrolovat.
+ *
+ * Bohuzel to ted je promo v coralu, takze se to pronese i do vsech budoucich projektu. 
+ * Bude potreba dat soubor _Settings.scss na uroven projektu a ne do coralu. Klidne pres nejaky prolinkovnai souboru.
+*/
+
+/*vypnuti responsive pro small a medium*/
+
+$small-range: (0em, 0em); /* 0, 640px */
+$medium-range: (0em, 0em); /* 641px, 642px */
+$large-range: (0em, 90em); /* 1025px, 1440px */
+$xlarge-range: (90.063em, 120em); /* 1441px, 1920px */
+$xxlarge-range: (120.063em); /* 1921px */
+$screen: "only screen";
+$landscape: "#{$screen} and (orientation: landscape)";
+$portrait: "#{$screen} and (orientation: portrait)";
+$small-up: $screen;
+$small-only: "#{$screen} and (max-width: #{upper-bound($small-range)})";
+$medium-up: "#{$screen} and (min-width:#{lower-bound($medium-range)})";
+$medium-only: "#{$screen} and (min-width:#{lower-bound($medium-range)}) and (max-width:#{upper-bound($medium-range)})";
+$large-up: "#{$screen} and (min-width:#{lower-bound($large-range)})";
+$large-only: "#{$screen} and (min-width:#{lower-bound($large-range)}) and (max-width:#{upper-bound($large-range)})";
+$xlarge-up: "#{$screen} and (min-width:#{lower-bound($xlarge-range)})";
+$xlarge-only: "#{$screen} and (min-width:#{lower-bound($xlarge-range)}) and (max-width:#{upper-bound($xlarge-range)})";
+$xxlarge-up: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)})";
+$xxlarge-only: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)}) and (max-width:#{upper-bound($xxlarge-range)})";
+$small: $medium-up;
+$medium: $medium-up;
+$large: $large-up;
+
+/* ================================================== Konec HACKU ========================= */
 
 //We use this as cursors values for enabling the option of having custom cursors in the whole site's stylesheet
 // $cursor-crosshair-value: crosshair;
