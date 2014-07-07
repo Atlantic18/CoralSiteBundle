@@ -14,24 +14,6 @@ use Coral\FileBundle\Entity\FileAttribute;
 
 class FileController extends Controller
 {
-    private function generateFilename($slug, $mimeType)
-    {
-        $maxId = $this->getDoctrine()->getManager()->createQuery(
-                'SELECT MAX(f.id) FROM CoralFileBundle:File f'
-            )
-            ->getSingleScalarResult();
-
-        return $slug . '-' . ($maxId + 1) . '.' . substr($mimeType, 6);
-    }
-
-    private function getAccount()
-    {
-        return $this->getDoctrine()->getManager()->createQuery(
-                'SELECT a FROM CoralCoreBundle:Account a WHERE a.id = 1'
-            )
-            ->getSingleResult();
-    }
-
     /**
      * @Route("/admin/file-upload/{slug}", name="file_upload")
      * @Method("POST")
@@ -71,22 +53,7 @@ class FileController extends Controller
             $newFilename = $this->generateFilename($slug, $mimeType);
             $newFilePath = $this->container->getParameter("kernel.root_dir") . "/../web/uploads/original/$newFilename";
 
-            $file = new File;
-            $file->setFilename($newFilename);
-            $file->setMimeType($mimeType);
-            $file->setHash($hash);
-            $file->setAccount($this->getAccount());
-
-            $fileAttribute = new FileAttribute;
             $fileAttribute->setName('node-slug');
-            $fileAttribute->setValue($slug);
-            $fileAttribute->setFile($file);
-
-            copy($filename, $newFilePath);
-
-            $em->persist($file);
-            $em->persist($fileAttribute);
-            $em->flush();
 
             return new JsonResponse(array(
                 'status'  => 'ok',
