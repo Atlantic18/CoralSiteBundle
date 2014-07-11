@@ -4,9 +4,15 @@ namespace Coral\SiteBundle\Service;
 
 use Coral\CoreBundle\Exception\CoralConnectException;
 use Coral\CoreBundle\Utility\JsonParser;
+use Doctrine\Common\Cache\Cache;
 
 class CoralConnectService
 {
+    /**
+     * Cache driver
+     * @var Cache
+     */
+    private $_cache;
     /**
      * Coral account
      * @var string
@@ -32,8 +38,9 @@ class CoralConnectService
      */
     private $_disableSslVerification = true;
 
-    public function __construct($host, $account, $key)
+    public function __construct(Cache $cache, $host, $account, $key)
     {
+        $this->_cache = $cache;
         $this->_host = $host;
         $this->_account = $account;
         $this->_key = $key;
@@ -121,11 +128,31 @@ class CoralConnectService
      * Create GET request to CORAL backend
      *
      * @param  string $uri  Service URI
+     * @param  int $ttl seconds for the cache to live
      * @return JsonResponse Response
      */
-    public function doGetRequest($uri)
+    public function doGetRequest($uri, $ttl = false)
     {
-        return $this->doCurlRequest('GET', $uri);
+        if($ttl && intval($ttl) > 0)
+        {
+            if (false === ($params = $this->_cache->fetch($uri)))
+            {
+                $parser = $this->doCurlRequest('GET', $uri);
+
+                $this->_cache->save($uri, $parser->getParams(), $ttl);
+            }
+            else
+            {
+                $parser = new JsonParser;
+                $parser->setParams($params);
+            }
+        }
+        else
+        {
+            $parser = $this->doCurlRequest('GET', $uri);
+        }
+
+        return $parser;
     }
 
     /**
