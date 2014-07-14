@@ -105,6 +105,7 @@ class CoralConnectService
         {
             throw new CoralConnectException(
                 "Error connecting to CORAL backend.
+                Uri: $type $uri
                 Response code: $httpCode.
                 Error: " . $parser->getMandatoryParam('message'));
         }
