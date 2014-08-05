@@ -4,7 +4,29 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="coral.sitemap.class">Coral\SiteBundle\Service\Sitemap</parameter>
+        <parameter key="coral.site_cache.class">Doctrine\Common\Cache\PhpFileCache</parameter>
+        <parameter key="coral.page.class">Coral\SiteBundle\Service\Page</parameter>
+    </parameters>
+
     <services>
+        <service id="coral.site.cache" class="%coral.site_cache.class%">
+            <argument>%kernel.cache_dir%</argument>
+            <call method="setNamespace">
+                <argument>coral_site</argument>
+            </call>
+        </service>
+        <service id="coral.node" synthetic="true" />
+        <service id="coral.sitemap" class="%coral.sitemap.class%">
+            <argument type="service" id="coral.site.cache"/>
+            <argument>%coral.content.path%</argument>
+        </service>
+        <service id="coral.page" class="%coral.page.class%">
+            <argument type="service" id="coral.node"/>
+            <argument>%coral.content.path%</argument>
+        </service>
+
         <service id="coral.twig.coral_extension" class="Coral\SiteBundle\Twig\CoralExtension" public="false">
             <argument type="service" id="templating.helper.markdown" />
             <tag name="twig.extension" />

@@ -5,16 +5,36 @@ namespace Coral\SiteBundle\Service;
 use Coral\SiteBundle\Content\Node;
 use Coral\SiteBundle\Parser\PropertiesParser;
 use Coral\SiteBundle\Parser\SortorderParser;
+use Doctrine\Common\Cache\Cache;
 
-class SitemapService
+class Sitemap
 {
+    /**
+     * Root path where the content is stored
+     *
+     * @var string
+     */
     private $contentPath;
+    /**
+     * Cache driver
+     *
+     * @var Cache
+     */
+    private $cache;
 
-    public function __construct($contentPath)
+    public function __construct(Cache $cache, $contentPath)
     {
         $this->contentPath = $contentPath;
+        $this->cache       = $cache;
     }
 
+    /**
+     * Recursively builds a structure of the sitemap from files
+     *
+     * @param  string $path
+     * @throws \Coral\SiteBundle\Exception\SitemapException in case .properties file is missing
+     * @return Node
+     */
     private function readNode($path)
     {
         $propertiesFileName = $path . DIRECTORY_SEPARATOR . '.properties';
@@ -59,8 +79,28 @@ class SitemapService
         throw new \Coral\SiteBundle\Exception\SitemapException("Unable to find properties for: [$propertiesFileName]");
     }
 
+    /**
+     * Get Root node
+     * @return [type] [description]
+     */
     public function getRoot()
     {
-        return $this->readNode($this->contentPath);
+        $cacheKey = 'coral.sitemap.nodes';
+        if(false === ($root = $this->cache->fetch($cacheKey)))
+        {
+            $root = $this->readNode($this->contentPath);
+
+            if(!$this->cache->save($cacheKey, $root))
+            {
+                throw new \Coral\SiteBundle\Exception\SitemapException("Unable to store into cache.");
+            }
+        }
+
+        return $root;
+    }
+
+    public function isRootCached()
+    {
+        return $this->cache->contains('coral.sitemap.nodes');
     }
 }

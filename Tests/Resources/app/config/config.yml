@@ -1,3 +1,9 @@
+parameters:
+    coral.site_cache.class: Doctrine\Common\Cache\ArrayCache
+
+coral_site:
+    content_path: %kernel.root_dir%/../fixtures/AcmeContent/content
+
 framework:
     secret: test
     test: ~
@@ -13,16 +19,6 @@ framework:
     default_locale: "en"
 
 services:
-    kernel.listener.core_bundle_exception_listener:
-        class: Coral\CoreBundle\Service\JsonExceptionService
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
-        arguments:
-            - @logger
-    kernel.listener.core_bundle_authentication_listener:
-        class: Coral\CoreBundle\Service\JsonAuthenticationService
-        tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
     # Doctrine Extension listeners to handle behaviors
     gedmo.listener.tree:
         class: Gedmo\Tree\TreeListener

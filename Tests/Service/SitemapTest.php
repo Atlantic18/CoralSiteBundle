@@ -11,14 +11,15 @@
 
 namespace Coral\SiteBundle\Tests\Service;
 
-use Coral\SiteBundle\Service\SitemapService;
+use Coral\SiteBundle\Service\Sitemap;
 use Coral\SiteBundle\Content\Node;
+use Coral\CoreBundle\Test\WebTestCase;
 
-class SitemapServiceTest extends \PHPUnit_Framework_TestCase
+class SitemapTest extends WebTestCase
 {
     public function testSitemapTree()
     {
-        $sitemap = new SitemapService(dirname(__FILE__) . '/../Resources/fixtures/AcmeContent/content');
+        $sitemap = $this->getContainer()->get('coral.sitemap');
         $root = $sitemap->getRoot();
 
         $this->assertTrue($root instanceof Node);
@@ -101,5 +102,27 @@ class SitemapServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https://store.acme.com', $buyNow->getProperty('target'));
 
         $this->assertTrue(null === $root->getChildByIndex(4));
+    }
+
+    public function testCache()
+    {
+        $sitemap = $this->getContainer()->get('coral.sitemap');
+        //fill cache
+        $this->assertFalse($sitemap->isRootCached());
+        $sitemap->getRoot();
+        $this->assertTrue($sitemap->isRootCached());
+        //check cache is used
+        $root = $sitemap->getRoot();
+
+        $this->assertTrue($root instanceof Node);
+        $this->assertTrue($root->hasChildren());
+        $this->assertEquals('Homepage', $root->getName());
+        $this->assertTrue($root === $root->getChildByIndex(0)->parent());
+        $this->assertFalse($root->getChildByIndex(0)->hasChildren());
+        $this->assertEquals('Products', $root->getChildByIndex(0)->getName());
+        $this->assertEquals('About Us', $root->getChildByIndex(1)->getName());
+        $this->assertTrue($root->getChildByIndex(2)->hasChildren());
+        $this->assertEquals('/contact-us', $root->getChildByIndex(2)->getUri());
+        $this->assertEquals('Location', $root->getChildByIndex(2)->getChildByIndex(0)->getName());
     }
 }

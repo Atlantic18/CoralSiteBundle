@@ -22,9 +22,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('uri')->isRequired()->end()
-                ->scalarNode('account')->isRequired()->end()
-                ->scalarNode('api_key')->isRequired()->end()
+                ->scalarNode('content_path')
+                    ->cannotBeEmpty()
+                    ->defaultValue('%kernel.root_dir%/Resources/Content')
+                    ->info('Path to the content repository')
+                ->end()
             ->end();
 
         return $treeBuilder;
