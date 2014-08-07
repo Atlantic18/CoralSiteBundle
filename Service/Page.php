@@ -23,12 +23,6 @@ class Page
      */
     private $node;
     /**
-     * List of available filters for area
-     *
-     * @var array
-     */
-    private $filters;
-    /**
      * Root content path
      *
      * @var string
@@ -45,20 +39,7 @@ class Page
     {
         $this->node        = null;
         $this->areas       = null;
-        $this->filters     = array();
         $this->contentPath = $contentPath;
-    }
-
-    public function addFilter(\Swift_Transport $transport, $alias)
-    {
-        $this->filters[$alias] = $transport;
-    }
-
-    public function getFilter($alias)
-    {
-        if (array_key_exists($alias, $this->filters)) {
-           return $this->filters[$alias];
-        }
     }
 
     /**
@@ -184,11 +165,6 @@ class Page
     public function hasArea($name)
     {
         return (null !== $this->getArea($name));
-    }
-
-    public function renderArea($name)
-    {
-
     }
 
     public function setNode(Node $node)

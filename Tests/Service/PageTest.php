@@ -81,6 +81,15 @@ class PageTest extends WebTestCase
         $this->assertTrue($page->hasArea('footer'), 'Homepage has footer area');
         $this->assertFalse($page->getArea('footer')->isInherited(), 'Homepage doesn\'t have inherited footer area');
         $this->assertFalse($page->hasArea('foo'), 'Homepage doesn\'t have foo area');
+
+    }
+
+    public function testMarkdownContentRender()
+    {
+        //inject homepage node
+        $root = $this->getContainer()->get('coral.sitemap')->getRoot();
+        $this->getContainer()->set('coral.node', $root);
+        $page = $this->getContainer()->get('coral.page');
     }
 
     public function testLocationPage()
