@@ -1,8 +1,15 @@
 parameters:
     coral.site_cache.class: Doctrine\Common\Cache\ArrayCache
+    coral.connect_cache.class: Doctrine\Common\Cache\ArrayCache
+    coral.connect.class:       Coral\CoreBundle\Service\CoralConnectMockup
 
 coral_site:
     content_path: %kernel.root_dir%/../fixtures/AcmeContent/content
+
+coral_core:
+    uri:     %kernel.root_dir%/coral_connect
+    account: account
+    api_key: apisecretkey
 
 framework:
     secret: test

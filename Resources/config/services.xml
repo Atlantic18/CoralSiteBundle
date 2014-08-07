@@ -23,8 +23,10 @@
             <argument>%coral.content.path%</argument>
         </service>
         <service id="coral.page" class="%coral.page.class%">
-            <argument type="service" id="coral.node"/>
             <argument>%coral.content.path%</argument>
+            <call method="setNode">
+                <argument type="service" id="coral.node"/>
+            </call>
         </service>
 
         <service id="coral.twig.coral_extension" class="Coral\SiteBundle\Twig\CoralExtension" public="false">
