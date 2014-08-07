@@ -8,6 +8,7 @@
         <parameter key="coral.sitemap.class">Coral\SiteBundle\Service\Sitemap</parameter>
         <parameter key="coral.site_cache.class">Doctrine\Common\Cache\PhpFileCache</parameter>
         <parameter key="coral.page.class">Coral\SiteBundle\Service\Page</parameter>
+        <parameter key="coral.renderer.class">Coral\SiteBundle\Service\Renderer</parameter>
     </parameters>
 
     <services>
@@ -27,6 +28,8 @@
             <call method="setNode">
                 <argument type="service" id="coral.node"/>
             </call>
+        </service>
+        <service id="coral.renderer" class="%coral.renderer.class%">
         </service>
 
         <service id="coral.twig.coral_extension" class="Coral\SiteBundle\Twig\CoralExtension" public="false">
