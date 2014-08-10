@@ -12,7 +12,7 @@ class DefaultController extends Controller
     /**
      * @Route("/menu/{max_level}")
      */
-    public function menuAction($max_level)
+    public function menuAction($max_level, $uri = null)
     {
         $sitemap = $this->get('coral.sitemap');
 
@@ -21,13 +21,19 @@ class DefaultController extends Controller
             array(
                 'parent'      => $sitemap->getRoot(),
                 'max_level'   => $max_level - 1,
-                'current_url' => $this->getRequest()->getRequestUri()
+                'current_url' => (null === $uri) ? $this->getRequest()->getRequestUri() : $uri
             )
         );
     }
 
     public function pageAction()
     {
-        return new Response('found');
+        return $this->render(
+            'CoralSiteBundle:Default:page.html.twig',
+            array(
+                'page'     => $this->get('coral.page'),
+                'renderer' => $this->get('coral.renderer')
+            )
+        );
     }
 }

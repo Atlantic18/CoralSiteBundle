@@ -6,7 +6,6 @@
   {% if (not node.hasProperty('permission')) or (is_granted(node.getProperty('permission'))) %}
     <li{% if current_url == node.uri %} class="active"{% endif %}>
       <a href="{{ node.uri }}">{{ node.name }}</a>
-
       {% if node.hasChildren() and (max_level > 0) %}
         <ul>
           {{ include('CoralSiteBundle:Default:menu.html.twig', { 'parent': node, 'max_level': max_level - 1, 'current_url': current_url }) }}

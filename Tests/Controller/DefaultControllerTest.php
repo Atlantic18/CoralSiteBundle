@@ -66,13 +66,18 @@ class DefaultControllerTest extends WebTestCase
             array(),
             array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
         );
-
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $this->assertEquals('<li>', substr($client->getResponse()->getContent(), 0, 4));
-        $this->assertEquals(4, $crawler->filter('body > li')->count());
-        $this->assertEquals(0, $crawler->filter('ul')->count());
-        $this->assertEquals('Products', $crawler->filter('body > li:nth-child(1) > a')->text());
-        $this->assertEquals('/contact-us', $crawler->filter('body > li:nth-child(3) > a')->attr('href'));
+        $this->assertEquals(4, $crawler->filter('.navigation > ul > li')->count());
+        $this->assertEquals(1, $crawler->filter('.navigation ul ul')->count());
+        $this->assertEquals('Products', $crawler->filter('.navigation > ul > li:nth-child(1) > a')->text());
+        $this->assertEquals('/contact-us', $crawler->filter('.navigation > ul > li:nth-child(3) > a')->attr('href'));
+
+        $this->assertEquals('Location', $crawler->filter('.navigation > ul li.active > a')->text());
+        $this->assertEquals('/contact-us/location', $crawler->filter('.navigation > ul li.active > a')->attr('href'));
+
+        $this->assertEquals('Location', $crawler->filter('.main h1')->text());
+
+        $this->assertEquals('Different footer pure html.', $crawler->filter('.footer > p')->text());
     }
 }

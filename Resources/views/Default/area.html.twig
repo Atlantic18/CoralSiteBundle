@@ -1,0 +1,5 @@
+{%- if page.hasArea(name) %}
+  {% for i in 0..100 if page.getArea(name).getContentByIndex(i) -%}
+    {{ renderer.render(page.getArea(name).getContentByIndex(i))|raw }}
+  {%- endfor %}
+{% endif -%}
