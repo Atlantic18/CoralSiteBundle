@@ -19,37 +19,41 @@ use Coral\CoreBundle\Test\WebTestCase;
 
 class PageTest extends WebTestCase
 {
-    /**
-     * @expectedException Symfony\Component\DependencyInjection\Exception\RuntimeException
-     */
-    public function testNodeNotInjected()
+    private function createRequestStack($uri)
     {
-        $page = $this->getContainer()->get('coral.page');
+        $stack   = new \Symfony\Component\HttpFoundation\RequestStack;
+        $request = \Symfony\Component\HttpFoundation\Request::create($uri);
+        $stack->push($request);
+        $this->getContainer()->set('request_stack', $stack);
     }
 
-    public function testNodeInjectedTwice()
+    /**
+     * @expectedException Coral\SiteBundle\Exception\SitemapException
+     */
+    public function testInvalidUrl()
     {
-        $root = $this->getContainer()->get('coral.sitemap')->getRoot();
-        $this->getContainer()->set('coral.node', $root->getChildByIndex(2));
-
+        $this->createRequestStack('/unknown');
         $page = $this->getContainer()->get('coral.page');
-
-        $this->getContainer()->set('coral.node', $root->getChildByIndex(1));
-
-        $this->assertTrue($page->getNode() === $root->getChildByIndex(2));
-        $this->assertFalse($page->getNode() === $root->getChildByIndex(1));
+        $page->getNode();
     }
 
     public function testContactUsPage()
     {
-        //inject contact-us node
-        $root = $this->getContainer()->get('coral.sitemap')->getRoot();
-        $this->getContainer()->set('coral.node', $root->getChildByIndex(2));
-
+        $this->createRequestStack('/contact-us');
         $page = $this->getContainer()->get('coral.page');
 
-        $this->assertTrue(null !== $page->getNode(), 'Node is injected properly');
-        $this->assertTrue($page->getNode() === $root->getChildByIndex(2));
+        //only partial node is read
+        $this->assertTrue(null !== $page->getNode(), 'Node is fetched properly');
+        $this->assertTrue(null === $page->getNode()->parent());
+        $this->assertTrue(null === $page->getNode()->prev());
+        $this->assertTrue(null === $page->getNode()->next());
+        $this->assertFalse($page->getNode()->hasChildren());
+        $this->assertEquals('Contact us', $page->getNode()->getName());
+        $this->assertEquals('/contact-us', $page->getNode()->getUri());
+        $this->assertFalse($page->getNode()->hasProperty('keywords'));
+        $this->assertFalse($page->getNode()->hasProperty('description'));
+        $this->assertEquals('contact.html.twig', $page->getNode()->getProperty('template'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('tree_template'));
 
         $this->assertFalse($page->hasArea('main'), 'Contact-us doesn\'t have main area');
         $this->assertTrue($page->hasArea('footer'), 'Contact-us has inherited footer area');
@@ -61,14 +65,16 @@ class PageTest extends WebTestCase
 
     public function testHomepagePage()
     {
-        //inject homepage node
-        $root = $this->getContainer()->get('coral.sitemap')->getRoot();
-        $this->getContainer()->set('coral.node', $root);
-
+        $this->createRequestStack('/');
         $page = $this->getContainer()->get('coral.page');
 
-        $this->assertTrue(null !== $page->getNode(), 'Node is injected properly');
-        $this->assertTrue($page->getNode() === $root);
+        $this->assertEquals('Homepage', $page->getNode()->getName());
+        $this->assertEquals('/', $page->getNode()->getUri());
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('template'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('tree_template'));
+        $this->assertEquals('acme, project, default', $page->getNode()->getProperty('keywords'));
+        $this->assertEquals('ACME: see for yourself', $page->getNode()->getProperty('description'));
+
         $this->assertTrue($page->hasArea('main'), 'Homepage has main area');
         $this->assertFalse($page->getArea('main')->isEmpty(), 'Homepage main area is not empty');
         $this->assertFalse($page->getArea('main')->isInherited(), 'Homepage main is not inherited area');
@@ -81,24 +87,23 @@ class PageTest extends WebTestCase
         $this->assertTrue($page->hasArea('footer'), 'Homepage has footer area');
         $this->assertFalse($page->getArea('footer')->isInherited(), 'Homepage doesn\'t have inherited footer area');
         $this->assertFalse($page->hasArea('foo'), 'Homepage doesn\'t have foo area');
-
-    }
-
-    public function testMarkdownContentRender()
-    {
-        //inject homepage node
-        $root = $this->getContainer()->get('coral.sitemap')->getRoot();
-        $this->getContainer()->set('coral.node', $root);
-        $page = $this->getContainer()->get('coral.page');
     }
 
     public function testLocationPage()
     {
-        //inject location node
-        $root = $this->getContainer()->get('coral.sitemap')->getRoot();
-        $this->getContainer()->set('coral.node', $root->getChildByIndex(2)->getChildByIndex(0));
-
+        $this->createRequestStack('/contact-us/location');
         $page = $this->getContainer()->get('coral.page');
+
+        $this->assertTrue(null === $page->getNode()->parent());
+        $this->assertTrue(null === $page->getNode()->prev());
+        $this->assertTrue(null === $page->getNode()->next());
+        $this->assertFalse($page->getNode()->hasChildren());
+        $this->assertEquals('Location', $page->getNode()->getName());
+        $this->assertEquals('/contact-us/location', $page->getNode()->getUri());
+        $this->assertFalse($page->getNode()->hasProperty('keywords'));
+        $this->assertEquals('Contact Us: where to find us', $page->getNode()->getProperty('description'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('template'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('tree_template'));
 
         $this->assertFalse($page->hasArea('main'), 'Location doesn\'t have main area');
         $this->assertTrue($page->hasArea('footer'), 'Location has footer area');

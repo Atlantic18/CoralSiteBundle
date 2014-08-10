@@ -9,6 +9,7 @@
         <parameter key="coral.site_cache.class">Doctrine\Common\Cache\PhpFileCache</parameter>
         <parameter key="coral.page.class">Coral\SiteBundle\Service\Page</parameter>
         <parameter key="coral.renderer.class">Coral\SiteBundle\Service\Renderer</parameter>
+        <parameter key="coral.request_filter.class">Coral\SiteBundle\Service\RequestFilter</parameter>
     </parameters>
 
     <services>
@@ -19,20 +20,25 @@
             </call>
         </service>
 
-        <service id="coral.node" synthetic="true" />
-
         <service id="coral.sitemap" class="%coral.sitemap.class%">
             <argument type="service" id="coral.site.cache"/>
             <argument>%coral.content.path%</argument>
         </service>
 
         <service id="coral.page" class="%coral.page.class%">
+            <argument type="service" id="request_stack"/>
             <argument>%coral.content.path%</argument>
-            <call method="setNode">
-                <argument type="service" id="coral.node"/>
-            </call>
         </service>
 
+        <!-- Inject content uris -->
+        <service id="coral.listener.route_resolve" class="%coral.request_filter.class%">
+            <argument>%coral.content.path%</argument>
+            <argument type="service" id="logger"/>
+
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="50" />
+        </service>
+
+        <!-- Renderer configuration -->
         <service id="coral.renderer" class="%coral.renderer.class%" />
 
         <service id="coral.filter.markdown" class="Coral\SiteBundle\Content\Filter\Markdown">

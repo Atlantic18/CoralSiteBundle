@@ -5,8 +5,13 @@ namespace Coral\SiteBundle\Service;
 use Coral\SiteBundle\Content\Area;
 use Coral\SiteBundle\Content\Content;
 use Coral\SiteBundle\Content\Node;
+use Coral\SiteBundle\Parser\PropertiesParser;
 use Coral\SiteBundle\Exception\PageException;
 use Coral\SiteBundle\Parser\SortorderParser;
+use Coral\SiteBundle\Service\RequestFilter;
+use Coral\SiteBundle\Exception\SitemapException;
+
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Page
 {
@@ -28,6 +33,12 @@ class Page
      * @var string
      */
     private $contentPath;
+    /**
+     * Request stack
+     *
+     * @var RequestStack
+     */
+    protected $requestStack;
 
     /**
      * Page constructor
@@ -35,11 +46,12 @@ class Page
      * @param Node   $node
      * @param string $contentPath Where the content is located
      */
-    public function __construct($contentPath)
+    public function __construct(RequestStack $requestStack, $contentPath)
     {
-        $this->node        = null;
-        $this->areas       = null;
-        $this->contentPath = $contentPath;
+        $this->node         = null;
+        $this->areas        = null;
+        $this->contentPath  = $contentPath;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -81,12 +93,18 @@ class Page
     /**
      * Read area definitions and content from the disk
      *
-     * @param  Node $node
-     * @return array List of Area
+     * @param  string $dirPath
      */
-    private function scanAreas(Node $node)
+    private function scanAreas($dirPath)
     {
-        $dirPath = $this->contentPath . $node->getUri();
+        $dirPath = realpath($dirPath);
+        $realContentPath = realpath($this->contentPath);
+
+        if(strcmp($realContentPath, $dirPath) > 0)
+        {
+            return;
+        }
+
         if(is_dir($dirPath) && (($dir = @opendir($dirPath)) !== false))
         {
             while (($subDirName = readdir($dir)) !== false)
@@ -99,7 +117,7 @@ class Page
                 ) {
                     $areaName = $subDirName;
                     //Searching for all areas
-                    if($node === $this->getNode())
+                    if(realpath($realContentPath . $this->getNode()->getUri()) == $dirPath)
                     {
                         //normalize area name
                         $areaName = (substr($areaName, 0, 6) == '.tree_') ? substr($areaName, 6) : substr($areaName, 1);
@@ -132,10 +150,7 @@ class Page
             throw new  PageException("Unable to read path");
         }
 
-        if(null !== $node->parent())
-        {
-            $this->scanAreas($node->parent());
-        }
+        $this->scanAreas($dirPath . '/..');
     }
 
     /**
@@ -150,7 +165,7 @@ class Page
         {
             $this->areas = array();
 
-            $this->scanAreas($this->getNode());
+            $this->scanAreas($this->contentPath . $this->getNode()->getUri());
         }
 
         return array_key_exists($name, $this->areas) ? $this->areas[$name] : null;
@@ -167,13 +182,70 @@ class Page
         return (null !== $this->getArea($name));
     }
 
-    public function setNode(Node $node)
+    /**
+     * Recursively reads Node properties. Node is not a structure
+     *
+     * @throws \Coral\SiteBundle\Exception\SitemapException in case .properties file is missing
+     * @return Node
+     */
+    private function readNode()
     {
-        $this->node = $node;
+        $request = $this->requestStack->getCurrentRequest();
+
+        if(false !== ($propertiesFileName = RequestFilter::getPropertyFileName($request, $this->contentPath)))
+        {
+            $properties = PropertiesParser::parse($propertiesFileName);
+            $node = new Node($properties['name'], $request->getRequestUri());
+
+            //Set properties
+            foreach($properties['properties'] as $key => $value)
+            {
+                $node->setProperty($key, $value);
+            }
+
+            //Read properties from parent nodes
+            $realContentPath = realpath($this->contentPath);
+            $parentDir = realpath(dirname($propertiesFileName));
+
+            while(strcmp($realContentPath, $parentDir) <= 0)
+            {
+                $parentPropertiesFile = $parentDir . '/.properties';
+                if(file_exists($parentPropertiesFile))
+                {
+                    $properties = PropertiesParser::parse($parentPropertiesFile);
+                    foreach($properties['properties'] as $key => $value)
+                    {
+                        if((substr($key, 0, 5) == 'tree_') && !$node->hasProperty($key))
+                        {
+                            $node->setProperty($key, $value);
+                        }
+                    }
+                }
+                else
+                {
+                    throw new SitemapException(sprintf('Unable to read properties [%s].', $parentPropertiesFile));
+                }
+                $parentDir = realpath($parentDir . '/..');
+            }
+
+            return $node;
+        }
+
+        throw new SitemapException(sprintf('Unable to read node for request [%s].', $request->getRequestUri()));
     }
 
+    /**
+     * Get Node
+     *
+     * @return Node
+     */
     public function getNode()
     {
+        if(null === $this->node)
+        {
+            $this->node = $this->readNode();
+        }
+
         return $this->node;
     }
 }
