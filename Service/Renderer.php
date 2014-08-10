@@ -42,10 +42,10 @@ class Renderer
         {
             throw new RenderException(
                 'Content filter [' . $content->getType() . '] not found. Available filters: ' .
-                implode(', ', array_keys($this->filters))
+                implode(', ', array_keys($this->filters)) . '.'
             );
         }
 
-        return $filter->render($contet->getContent());
+        return $this->filters[$content->getType()]->render($content->getContent());
     }
 }

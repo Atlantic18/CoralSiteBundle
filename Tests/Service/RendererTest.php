@@ -33,6 +33,15 @@ class RendererTest extends WebTestCase
 
         $content = new Content('markdown', "## Header 2");
 
-        $this->assertEquals('<h2>Header 2</h2>', $renderer->render($content));
+        $this->assertEquals('<h2>Header 2</h2>', trim($renderer->render($content)));
+    }
+
+    public function testHtml()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('html', "<h2>Test</h2>");
+
+        $this->assertEquals('<h2>Test</h2>', $renderer->render($content));
     }
 }

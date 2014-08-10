@@ -24,6 +24,7 @@
         "doctrine/orm": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/doctrine-fixtures-bundle": "*",
+        "knplabs/knp-markdown-bundle": "1.2.*@dev",
         "gedmo/doctrine-extensions": "dev-master"
     },
     "autoload": {
