@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/menu/{max_level}/{active_node}")
+     * @Route("/menu/{max_level}")
      */
-    public function menuAction($max_level, $active_node = null)
+    public function menuAction($max_level)
     {
         $sitemap = $this->get('coral.sitemap');
 
@@ -24,5 +24,10 @@ class DefaultController extends Controller
                 'current_url' => $this->getRequest()->getRequestUri()
             )
         );
+    }
+
+    public function pageAction()
+    {
+        return new Response('found');
     }
 }
