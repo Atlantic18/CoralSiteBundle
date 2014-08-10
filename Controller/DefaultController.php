@@ -4,15 +4,13 @@ namespace Coral\SiteBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @Route("/menu")
- */
-class MenuController extends Controller
+class DefaultController extends Controller
 {
     /**
-     * @Route("/root/{max_level}/{active_node}")
+     * @Route("/menu/root/{max_level}/{active_node}")
      */
     public function rootAction($max_level, $active_node = null)
     {
