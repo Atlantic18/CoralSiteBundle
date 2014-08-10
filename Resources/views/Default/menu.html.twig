@@ -1,0 +1,20 @@
+{% spaceless %}
+{% for i in 0..100 if parent.getChildByIndex(i) %}
+
+  {% set node = parent.getChildByIndex(i) %}
+
+  {% if (not node.hasProperty('permission')) or (is_granted(node.getProperty('permission'))) %}
+    <li{% if current_url == node.uri %} class="active"{% endif %}>
+      <a href="{{ node.uri }}">{{ node.name }}</a>
+
+      {% if node.hasChildren() and (max_level > 0) %}
+        <ul>
+          {{ include('CoralSiteBundle:Default:menu.html.twig', { 'parent': node, 'max_level': max_level - 1, 'current_url': current_url }) }}
+        </ul>
+      {% endif %}
+
+    </li>
+  {% endif %}
+
+{% endfor %}
+{% endspaceless %}

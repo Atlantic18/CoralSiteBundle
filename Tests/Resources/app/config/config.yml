@@ -1,3 +1,6 @@
+imports:
+    - { resource: security.yml }
+
 parameters:
     coral.site_cache.class: Doctrine\Common\Cache\ArrayCache
     coral.connect_cache.class: Doctrine\Common\Cache\ArrayCache
@@ -21,9 +24,15 @@ framework:
     validation:
         enabled: true
         enable_annotations: true
+    templating:
+        engines: ['twig']
     router:
         resource: %kernel.root_dir%/config/routing.php
     default_locale: "en"
+
+twig:
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
 
 services:
     # Doctrine Extension listeners to handle behaviors

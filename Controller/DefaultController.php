@@ -10,15 +10,19 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/menu/root/{max_level}/{active_node}")
+     * @Route("/menu/{max_level}/{active_node}")
      */
-    public function rootAction($max_level, $active_node = null)
+    public function menuAction($max_level, $active_node = null)
     {
-        $items = $this->get('coral_connect')->doGetRequest('/v1/node/list')->getMandatoryParam('items[0].items');
+        $sitemap = $this->get('coral.sitemap');
 
         return $this->render(
-            'CoralSiteBundle:Menu:root.html.twig',
-            array('items' => $items, 'max_level' => $max_level - 1, 'active_node' => $active_node)
+            'CoralSiteBundle:Default:menu.html.twig',
+            array(
+                'parent'      => $sitemap->getRoot(),
+                'max_level'   => $max_level - 1,
+                'current_url' => $this->getRequest()->getRequestUri()
+            )
         );
     }
 }
