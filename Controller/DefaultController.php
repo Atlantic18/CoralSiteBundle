@@ -28,10 +28,11 @@ class DefaultController extends Controller
 
     public function pageAction()
     {
+        $page = $this->get('coral.page');
         return $this->render(
-            'CoralSiteBundle:Default:page.html.twig',
+            $page->getNode()->getProperty('template', 'CoralSiteBundle:Default:page.html.twig'),
             array(
-                'page'     => $this->get('coral.page'),
+                'page'     => $page,
                 'renderer' => $this->get('coral.renderer')
             )
         );

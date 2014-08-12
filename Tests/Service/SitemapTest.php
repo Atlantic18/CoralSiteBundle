@@ -31,8 +31,8 @@ class SitemapTest extends WebTestCase
         $this->assertTrue(null === $root->prev());
         $this->assertEquals('Homepage', $root->getName());
         $this->assertEquals('/', $root->getUri());
-        $this->assertEquals('default.html.twig', $root->getProperty('template'));
-        $this->assertEquals('default.html.twig', $root->getProperty('tree_template'));
+        $this->assertEquals('::default.html.twig', $root->getProperty('template'));
+        $this->assertEquals('::default.html.twig', $root->getProperty('tree_template'));
         $this->assertEquals('acme, project, default', $root->getProperty('keywords'));
         $this->assertEquals('ACME: see for yourself', $root->getProperty('description'));
 
@@ -45,8 +45,8 @@ class SitemapTest extends WebTestCase
         $this->assertEquals('/products', $products->getUri());
         $this->assertFalse($products->hasProperty('keywords'));
         $this->assertFalse($products->hasProperty('description'));
-        $this->assertEquals('default.html.twig', $products->getProperty('template'));
-        $this->assertEquals('default.html.twig', $products->getProperty('tree_template'));
+        $this->assertEquals('::page_test.html.twig', $products->getProperty('template'));
+        $this->assertEquals('::default.html.twig', $products->getProperty('tree_template'));
 
         //about-us
         $aboutUs = $root->getChildByIndex(1);
@@ -58,8 +58,8 @@ class SitemapTest extends WebTestCase
         $this->assertEquals('/about-us', $aboutUs->getUri());
         $this->assertFalse($aboutUs->hasProperty('keywords'));
         $this->assertFalse($aboutUs->hasProperty('description'));
-        $this->assertEquals('default.html.twig', $aboutUs->getProperty('template'));
-        $this->assertEquals('default.html.twig', $aboutUs->getProperty('tree_template'));
+        $this->assertEquals('::default.html.twig', $aboutUs->getProperty('template'));
+        $this->assertEquals('::default.html.twig', $aboutUs->getProperty('tree_template'));
 
         //contact-us
         $contactUs = $root->getChildByIndex(2);
@@ -71,8 +71,8 @@ class SitemapTest extends WebTestCase
         $this->assertEquals('/contact-us', $contactUs->getUri());
         $this->assertFalse($contactUs->hasProperty('keywords'));
         $this->assertFalse($contactUs->hasProperty('description'));
-        $this->assertEquals('contact.html.twig', $contactUs->getProperty('template'));
-        $this->assertEquals('default.html.twig', $contactUs->getProperty('tree_template'));
+        $this->assertEquals('::contact.html.twig', $contactUs->getProperty('template'));
+        $this->assertEquals('::default.html.twig', $contactUs->getProperty('tree_template'));
 
         //location
         $location = $contactUs->getChildByIndex(0);
@@ -84,8 +84,8 @@ class SitemapTest extends WebTestCase
         $this->assertEquals('/contact-us/location', $location->getUri());
         $this->assertFalse($location->hasProperty('keywords'));
         $this->assertEquals('Contact Us: where to find us', $location->getProperty('description'));
-        $this->assertEquals('default.html.twig', $location->getProperty('template'));
-        $this->assertEquals('default.html.twig', $location->getProperty('tree_template'));
+        $this->assertEquals('::default.html.twig', $location->getProperty('template'));
+        $this->assertEquals('::default.html.twig', $location->getProperty('tree_template'));
 
         //buy-now
         $buyNow = $root->getChildByIndex(3);
@@ -97,8 +97,8 @@ class SitemapTest extends WebTestCase
         $this->assertEquals('/buy-now', $buyNow->getUri());
         $this->assertFalse($buyNow->hasProperty('keywords'));
         $this->assertFalse($buyNow->hasProperty('description'));
-        $this->assertEquals('default.html.twig', $buyNow->getProperty('template'));
-        $this->assertEquals('default.html.twig', $buyNow->getProperty('tree_template'));
+        $this->assertEquals('::default.html.twig', $buyNow->getProperty('template'));
+        $this->assertEquals('::default.html.twig', $buyNow->getProperty('tree_template'));
         $this->assertEquals('https://store.acme.com', $buyNow->getProperty('target'));
 
         $this->assertTrue(null === $root->getChildByIndex(4));

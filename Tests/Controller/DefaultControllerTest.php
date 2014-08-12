@@ -80,4 +80,15 @@ class DefaultControllerTest extends WebTestCase
 
         $this->assertEquals('Different footer pure html.', $crawler->filter('.footer > p')->text());
     }
+
+    public function testPageTemplate()
+    {
+        $client  = static::createClient();
+        $crawler = $client->request('GET', '/products');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertEquals('Products', $crawler->filter('.main h1')->text());
+
+        $this->assertEquals('Page Test', $crawler->filter('.page_test > h3')->text());
+    }
 }
