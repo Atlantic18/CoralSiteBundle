@@ -54,6 +54,11 @@ class RequestFilter implements EventSubscriberInterface
     {
         $requestUri = $request->getRequestUri();
 
+        if(substr($requestUri, 0, strlen($request->getScriptName())) == $request->getScriptName())
+        {
+            $requestUri = substr($requestUri, strlen($request->getScriptName()));
+        }
+
         if($requestUri == '/')
         {
             $propertiesFile = $contentPath . DIRECTORY_SEPARATOR . '.properties';
