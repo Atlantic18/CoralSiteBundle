@@ -195,7 +195,7 @@ class Page
         if(false !== ($propertiesFileName = RequestFilter::getPropertyFileName($request, $this->contentPath)))
         {
             $properties = PropertiesParser::parse($propertiesFileName);
-            $node = new Node($properties['name'], $request->getRequestUri());
+            $node = new Node($properties['name'], $request->getPathInfo());
 
             //Set properties
             foreach($properties['properties'] as $key => $value)
@@ -231,7 +231,7 @@ class Page
             return $node;
         }
 
-        throw new SitemapException(sprintf('Unable to read node for request [%s].', $request->getRequestUri()));
+        throw new SitemapException(sprintf('Unable to read node for request [%s].', $request->getPathInfo()));
     }
 
     /**

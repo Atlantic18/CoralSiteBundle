@@ -21,7 +21,7 @@ class DefaultController extends Controller
             array(
                 'parent'      => $sitemap->getRoot(),
                 'max_level'   => $max_level - 1,
-                'current_url' => (null === $uri) ? $this->getRequest()->getRequestUri() : $uri
+                'current_url' => (null === $uri) ? $this->getRequest()->getPathInfo() : $uri
             )
         );
     }

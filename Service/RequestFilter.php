@@ -52,12 +52,7 @@ class RequestFilter implements EventSubscriberInterface
      */
     public static function getPropertyFileName(Request $request, $contentPath)
     {
-        $requestUri = $request->getRequestUri();
-
-        if(substr($requestUri, 0, strlen($request->getScriptName())) == $request->getScriptName())
-        {
-            $requestUri = substr($requestUri, strlen($request->getScriptName()));
-        }
+        $requestUri = $request->getPathInfo();
 
         if($requestUri == '/')
         {
