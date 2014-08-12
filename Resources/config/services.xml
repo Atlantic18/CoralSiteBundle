@@ -50,5 +50,12 @@
         <service id="coral.filter.passthru" class="Coral\SiteBundle\Content\Filter\Passthru">
             <tag name="coral.renderer.filter" type="html" />
         </service>
+
+        <!-- Twig extension -->
+        <service id="coral.twig.path_extension" class="Coral\SiteBundle\Twig\PathExtension">
+            <argument type="service" id="request_stack" />
+
+            <tag name="twig.extension" />
+        </service>
     </services>
 </container>
