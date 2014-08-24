@@ -42,7 +42,7 @@
         <service id="coral.renderer" class="%coral.renderer.class%" />
 
         <service id="coral.filter.markdown" class="Coral\SiteBundle\Content\Filter\Markdown">
-            <argument type="service" id="templating.helper.markdown" />
+            <argument type="service" id="markdown.parser" />
 
             <tag name="coral.renderer.filter" type="markdown" />
         </service>

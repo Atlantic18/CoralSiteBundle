@@ -2,15 +2,15 @@
 
 namespace Coral\SiteBundle\Content\Filter;
 
-use Knp\Bundle\MarkdownBundle\Helper\MarkdownHelper;
+use Knp\Bundle\MarkdownBundle\MarkdownParserInterface;
 
 class Markdown implements FilterInterface
 {
-    private $markdownHelper;
+    private $markdownParser;
 
-    function __construct(MarkdownHelper $markdownHelper)
+    function __construct(MarkdownParserInterface $markdownParser)
     {
-        $this->markdownHelper = $markdownHelper;
+        $this->markdownParser = $markdownParser;
     }
 
     /**
@@ -21,6 +21,6 @@ class Markdown implements FilterInterface
      */
     public function render($input)
     {
-        return $this->markdownHelper->transform($input);
+        return $this->markdownParser->transformMarkdown($input);
     }
 }
