@@ -57,3 +57,7 @@ doctrine:
     orm:
         auto_generate_proxy_classes: true
         auto_mapping: true
+
+knp_markdown:
+    parser:
+        service: markdown.parser.flavored

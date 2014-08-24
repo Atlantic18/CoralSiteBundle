@@ -36,6 +36,19 @@ class RendererTest extends WebTestCase
         $this->assertEquals('<h2>Header 2</h2>', trim($renderer->render($content)));
     }
 
+    public function testMarkdownFlavored()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('markdown', '```ruby
+require \'redcarpet\'
+markdown = Redcarpet.new("Hello World!")
+puts markdown.to_html
+```');
+
+        $this->assertContains('<pre><code class="ruby">', trim($renderer->render($content)));
+    }
+
     public function testHtml()
     {
         $renderer = $this->getContainer()->get('coral.renderer');
