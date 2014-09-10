@@ -30,7 +30,7 @@ class PathExtensionTest extends WebTestCase
         $this->getContainer()->set('request_stack', $stack);
     }
 
-    public function testPathWithScriptName()
+    public function testPathWithDevScriptName()
     {
         $this->createRequestStack('/app_dev.php');
         $extension = $this->getContainer()->get('coral.twig.path_extension');
@@ -41,6 +41,14 @@ class PathExtensionTest extends WebTestCase
     public function testPath()
     {
         $this->createRequestStack('');
+        $extension = $this->getContainer()->get('coral.twig.path_extension');
+
+        $this->assertEquals('/foo/bar', $extension->path('/foo/bar'));
+    }
+
+    public function testPathWithProdScriptName()
+    {
+        $this->createRequestStack('/app.php');
         $extension = $this->getContainer()->get('coral.twig.path_extension');
 
         $this->assertEquals('/foo/bar', $extension->path('/foo/bar'));

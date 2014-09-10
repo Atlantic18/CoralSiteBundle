@@ -28,8 +28,14 @@ class PathExtension extends \Twig_Extension
     public function path($path)
     {
         $request = $this->requestStack->getCurrentRequest();
+        $scriptName = $request->getScriptName();
 
-        return $request->getScriptName() . $path;
+        if(strpos($scriptName, '_') !== false)
+        {
+            return $scriptName . $path;
+        }
+
+        return $path;
     }
 
     public function getName()
