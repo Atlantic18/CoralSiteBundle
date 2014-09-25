@@ -12,6 +12,7 @@
 namespace Coral\SiteBundle\Tests\Twig;
 
 use Coral\CoreBundle\Test\WebTestCase;
+use Coral\SiteBundle\Content\Node;
 
 class PathExtensionTest extends WebTestCase
 {
@@ -35,7 +36,7 @@ class PathExtensionTest extends WebTestCase
         $this->createRequestStack('/app_dev.php');
         $extension = $this->getContainer()->get('coral.twig.path_extension');
 
-        $this->assertEquals('/app_dev.php/foo/bar', $extension->path('/foo/bar'));
+        $this->assertEquals('/app_dev.php/foo/bar', $extension->path(new Node('', '/foo/bar')));
     }
 
     public function testPath()
@@ -43,7 +44,7 @@ class PathExtensionTest extends WebTestCase
         $this->createRequestStack('');
         $extension = $this->getContainer()->get('coral.twig.path_extension');
 
-        $this->assertEquals('/foo/bar', $extension->path('/foo/bar'));
+        $this->assertEquals('/foo/bar', $extension->path(new Node('', '/foo/bar')));
     }
 
     public function testPathWithProdScriptName()
@@ -51,6 +52,6 @@ class PathExtensionTest extends WebTestCase
         $this->createRequestStack('/app.php');
         $extension = $this->getContainer()->get('coral.twig.path_extension');
 
-        $this->assertEquals('/foo/bar', $extension->path('/foo/bar'));
+        $this->assertEquals('/foo/bar', $extension->path(new Node('', '/foo/bar')));
     }
 }

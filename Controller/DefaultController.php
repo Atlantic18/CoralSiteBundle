@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
@@ -29,6 +30,16 @@ class DefaultController extends Controller
     public function pageAction()
     {
         $page = $this->get('coral.page');
+
+        if($page->getNode()->hasProperty('redirect'))
+        {
+            return $this->redirect($page->getNode()->getProperty('redirect'), 301);
+        }
+        if($page->getNode()->hasProperty('placeholder'))
+        {
+            throw new NotFoundHttpException('Page not found exception. Node is a placeholder.');
+        }
+
         return $this->render(
             $page->getNode()->getProperty('template', 'CoralSiteBundle:Default:page.html.twig'),
             array(

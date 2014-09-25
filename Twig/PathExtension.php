@@ -3,6 +3,7 @@
 namespace Coral\SiteBundle\Twig;
 
 use Symfony\Component\HttpFoundation\RequestStack;
+use Coral\SiteBundle\Content\Node;
 
 class PathExtension extends \Twig_Extension
 {
@@ -25,9 +26,14 @@ class PathExtension extends \Twig_Extension
         );
     }
 
-    public function path($path)
+    public function path(Node $node)
     {
+        if($node->hasProperty('redirect'))
+        {
+            return $node->getProperty('redirect');
+        }
         $request = $this->requestStack->getCurrentRequest();
+        $path = $node->getUri();
         $scriptName = $request->getScriptName();
 
         if(strpos($scriptName, '_') !== false)

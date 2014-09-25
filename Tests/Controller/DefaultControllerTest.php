@@ -16,7 +16,9 @@ class DefaultControllerTest extends WebTestCase
         $this->assertEquals(0, $crawler->filter('li.active')->count());
         $this->assertEquals(0, $crawler->filter('ul')->count());
         $this->assertEquals('Products', $crawler->filter('body > li:nth-child(1) > a')->text());
-        $this->assertEquals('/buy-now', $crawler->filter('body > li:nth-child(3) > a')->attr('href'));
+        $this->assertEquals('/products', $crawler->filter('body > li:nth-child(1) > a')->attr('href'));
+        $this->assertEquals('About Us', $crawler->filter('body > li:nth-child(2) > strong')->text());
+        $this->assertEquals('https://store.acme.com', $crawler->filter('body > li:nth-child(3) > a')->attr('href'));
     }
 
     public function testMenuAuthenticated()
@@ -79,6 +81,32 @@ class DefaultControllerTest extends WebTestCase
         $this->assertEquals('Location', $crawler->filter('.main h1')->text());
 
         $this->assertEquals('Different footer pure html.', $crawler->filter('.footer > p')->text());
+    }
+
+    public function testPageWhichHasLinkProperty()
+    {
+        $client  = static::createClient();
+        $crawler = $client->request(
+            'GET',
+            '/buy-now',
+            array(),
+            array(),
+            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
+        );
+        $this->assertTrue($client->getResponse()->isRedirect('https://store.acme.com'));
+    }
+
+    public function testPageWhichIsPlaceholder()
+    {
+        $client  = static::createClient();
+        $crawler = $client->request(
+            'GET',
+            '/about-us',
+            array(),
+            array(),
+            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
+        );
+        $this->assertTrue($client->getResponse()->isNotFound());
     }
 
     public function testPageTemplate()
