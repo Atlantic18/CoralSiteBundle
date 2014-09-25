@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
@@ -31,13 +30,26 @@ class DefaultController extends Controller
     {
         $page = $this->get('coral.page');
 
+        //Permission property, validate authentication
+        if(
+            $page->getNode()->hasProperty('permission')
+            &&
+            (false === $this->get('security.context')->isGranted($page->getNode()->getProperty('permission')))
+        )
+        {
+            throw $this->createAccessDeniedException('Unable to access this page!');
+        }
+        //Redirection property
         if($page->getNode()->hasProperty('redirect'))
         {
             return $this->redirect($page->getNode()->getProperty('redirect'), 301);
         }
+        //Placeholder property = Node is for structure only without content
         if($page->getNode()->hasProperty('placeholder'))
         {
-            throw new NotFoundHttpException('Page not found exception. Node is a placeholder.');
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(
+                'Page not found exception. Node is a placeholder.'
+            );
         }
 
         return $this->render(

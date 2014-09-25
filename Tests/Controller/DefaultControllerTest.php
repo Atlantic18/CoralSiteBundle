@@ -119,4 +119,24 @@ class DefaultControllerTest extends WebTestCase
 
         $this->assertEquals('Page Test', $crawler->filter('.page_test > h3')->text());
     }
+
+    public function testPageAuthenticated()
+    {
+        $client  = static::createClient();
+        $crawler = $client->request('GET', '/contact-us');
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED,
+            $client->getResponse()->getStatusCode()
+        );
+
+        $client  = static::createClient();
+        $crawler = $client->request(
+            'GET',
+            '/contact-us',
+            array(),
+            array(),
+            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
+        );
+        $this->assertTrue($client->getResponse()->isSuccessful());
+    }
 }

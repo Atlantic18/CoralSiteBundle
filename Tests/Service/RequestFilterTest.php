@@ -25,7 +25,7 @@ class RequestFilterTest extends WebTestCase
     public function testDot()
     {
         $client  = static::createClient();
-        $client->request('GET', '/contact-us.');
+        $client->request('GET', '/products.');
 
         $this->assertTrue($client->getResponse()->isNotFound());
     }
@@ -33,7 +33,7 @@ class RequestFilterTest extends WebTestCase
     public function testContactUs()
     {
         $client  = static::createClient();
-        $client->request('GET', '/contact-us');
+        $client->request('GET', '/products');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
