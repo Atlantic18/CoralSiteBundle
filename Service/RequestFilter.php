@@ -17,6 +17,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Coral\CoreBundle\Controller\JsonController;
 use Coral\CoreBundle\Exception\JsonException;
@@ -36,11 +37,18 @@ class RequestFilter implements EventSubscriberInterface
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * Redirection
+     *
+     * @var Redirection
+     */
+    private $redirection;
 
-    public function __construct($contentPath, LoggerInterface $logger = null)
+    public function __construct($contentPath, LoggerInterface $logger = null, Redirection $redirection = null)
     {
         $this->logger      = $logger;
         $this->contentPath = $contentPath;
+        $this->redirection = $redirection;
     }
 
     /**
@@ -82,6 +90,11 @@ class RequestFilter implements EventSubscriberInterface
                 $this->logger->info(sprintf('Coral matched route [%s].', $request->getRequestUri()));
             }
             $request->attributes->add(array('_controller' => 'CoralSiteBundle:Default:page'));
+        }
+
+        if(null !== ($redirection = $this->redirection->getRedirect($request->getPathInfo())))
+        {
+            $event->setResponse(new RedirectResponse($redirection[0], $redirection[1]));
         }
     }
 

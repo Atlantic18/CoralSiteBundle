@@ -37,4 +37,28 @@ class RequestFilterTest extends WebTestCase
 
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
+
+    public function testRedirectRoot()
+    {
+        $client  = static::createClient();
+        $client->request('GET', '/to-redirect');
+
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_MOVED_PERMANENTLY,
+            $client->getResponse()->getStatusCode()
+        );
+        $this->assertTrue($client->getResponse()->isRedirect('/en'));
+    }
+
+    public function testRedirectWildcard()
+    {
+        $client  = static::createClient();
+        $client->request('GET', '/old-section/some/document');
+
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $client->getResponse()->getStatusCode()
+        );
+        $this->assertTrue($client->getResponse()->isRedirect('/new-section/some/document'));
+    }
 }

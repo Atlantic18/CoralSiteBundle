@@ -27,6 +27,11 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('%kernel.root_dir%/Resources/Content')
                     ->info('Path to the content repository')
                 ->end()
+                ->scalarNode('config_path')
+                    ->cannotBeEmpty()
+                    ->defaultValue('%kernel.root_dir%/Resources/Configuration')
+                    ->info('Path to the configuration repository')
+                ->end()
             ->end();
 
         return $treeBuilder;

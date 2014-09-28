@@ -26,5 +26,6 @@ class CoralSiteExtension extends Extension
         $loader->load('services.xml');
 
         $container->setParameter('coral.content.path', $config['content_path']);
+        $container->setParameter('coral.config.path', $config['config_path']);
     }
 }

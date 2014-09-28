@@ -1,19 +1,14 @@
 {
     "redirections": [
         {
-            "source": "http://acme.com",
-            "target": "http://www.acme.com",
-            "type": 301
-        },
-        {
-            "source": "/",
+            "source": "/to-redirect",
             "target": "/en",
             "type": 301
         },
         {
             "source": "/old-section/*",
             "target": "/new-section/*",
-            "type": 301
+            "type": 302
         }
     ]
 }

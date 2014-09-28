@@ -24,6 +24,7 @@ class CoralSiteExtensionTest extends \PHPUnit_Framework_TestCase
         $this->compileContainer($container);
 
         $this->assertEquals(dirname(__FILE__) . '/Fixtures/Resources/Content', $container->getParameter('coral.content.path'));
+        $this->assertEquals(dirname(__FILE__) . '/Fixtures/Resources/Configuration', $container->getParameter('coral.config.path'));
     }
 
     /**
@@ -37,6 +38,7 @@ class CoralSiteExtensionTest extends \PHPUnit_Framework_TestCase
         $this->compileContainer($container);
 
         $this->assertEquals('custom_path', $container->getParameter('coral.content.path'));
+        $this->assertEquals('custom_config_path', $container->getParameter('coral.config.path'));
     }
 
     public function getFormats()
