@@ -10,11 +10,6 @@ coral_site:
     content_path: %kernel.root_dir%/../fixtures/AcmeContent/content
     config_path: %kernel.root_dir%/../fixtures/AcmeContent/configuration
 
-coral_core:
-    uri:     %kernel.root_dir%/coral_connect
-    account: account
-    api_key: apisecretkey
-
 framework:
     secret: test
     test: ~
