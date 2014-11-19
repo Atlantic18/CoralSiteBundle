@@ -35,29 +35,12 @@ twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
 
-services:
-    # Doctrine Extension listeners to handle behaviors
-    gedmo.listener.tree:
-        class: Gedmo\Tree\TreeListener
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-        calls:
-            - [ setAnnotationReader, [ @annotation_reader ] ]
-
 monolog:
     handlers:
         main:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
-
-doctrine:
-    dbal:
-        driver: pdo_sqlite
-        path:   %kernel.root_dir%/cache/database.%kernel.environment%.sqlite
-    orm:
-        auto_generate_proxy_classes: true
-        auto_mapping: true
 
 knp_markdown:
     parser:

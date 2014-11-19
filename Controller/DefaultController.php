@@ -47,9 +47,7 @@ class DefaultController extends Controller
         //Placeholder property = Node is for structure only without content
         if($page->getNode()->hasProperty('placeholder'))
         {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(
-                'Page not found exception. Node is a placeholder.'
-            );
+            throw $this->createNotFoundException('Page not found exception. Node is a placeholder.');
         }
 
         return $this->render(

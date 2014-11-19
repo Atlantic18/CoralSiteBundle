@@ -96,6 +96,22 @@ class DefaultControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect('https://store.acme.com'));
     }
 
+    public function testPageNotExist()
+    {
+        $client  = static::createClient();
+        $crawler = $client->request(
+            'GET',
+            '/nonexistent',
+            array(),
+            array(),
+            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
+        );
+        $this->assertTrue($client->getResponse()->isNotFound());
+    }
+
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function testPageWhichIsPlaceholder()
     {
         $client  = static::createClient();
@@ -106,7 +122,8 @@ class DefaultControllerTest extends WebTestCase
             array(),
             array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
         );
-        $this->assertTrue($client->getResponse()->isNotFound());
+        // for some reason forced 404 exception can't be tested this way
+        // $this->assertTrue($client->getResponse()->isNotFound());
     }
 
     public function testPageTemplate()
