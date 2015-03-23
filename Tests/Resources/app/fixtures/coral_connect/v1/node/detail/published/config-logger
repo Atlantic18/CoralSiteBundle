@@ -1,0 +1,23 @@
+{
+    "status": "ok",
+    "id": 1,
+    "name": "Config Logger",
+    "slug": "config-logger",
+    "sections": [
+        {
+            "name": "body",
+            "items": [
+                {
+                    "permid": "abc123",
+                    "content": "Here is some text content",
+                    "renderer": "markdown"
+                },
+                {
+                    "permid": "abc234",
+                    "content": "{ \"coral\": { \"level\": \"debug\", \"notify\": \"sample@email.not\" } }",
+                    "renderer": "json"
+                }
+            ]
+        }
+    ]
+}

@@ -57,6 +57,13 @@
             <tag name="coral.renderer.filter" type="html" />
         </service>
 
+        <service id="coral.filter.connect" class="Coral\SiteBundle\Content\Filter\Connect">
+            <argument type="service" id="coral.connector" />
+            <argument type="service" id="twig" />
+
+            <tag name="coral.renderer.filter" type="connect" />
+        </service>
+
         <!-- Twig extension -->
         <service id="coral.twig.path_extension" class="Coral\SiteBundle\Twig\PathExtension">
             <argument type="service" id="request_stack" />

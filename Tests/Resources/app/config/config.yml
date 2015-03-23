@@ -3,8 +3,14 @@ imports:
 
 parameters:
     coral.site_cache.class: Doctrine\Common\Cache\ArrayCache
-    coral.connect_cache.class: Doctrine\Common\Cache\ArrayCache
-    coral.connect.class:       Coral\CoreBundle\Service\CoralConnectMockup
+    coral.connector.cache.class: Doctrine\Common\Cache\ArrayCache
+
+services:
+    coral.connect.coral:
+        class: Coral\CoreBundle\Service\ConnectorMockup
+        arguments: ["@coral.connector.cache", "%kernel.root_dir%/fixtures/coral_connect", "account", "apisecretkey"]
+        tags:
+            -  { name: coral.connector.service, service: "coral" }
 
 coral_site:
     content_path: %kernel.root_dir%/../fixtures/AcmeContent/content
