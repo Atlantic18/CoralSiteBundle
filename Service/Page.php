@@ -77,10 +77,12 @@ class Page
                 {
                     $area->addContentAsLast(new Content($type, $fileContent));
                 }
+                // @codeCoverageIgnoreStart
                 else
                 {
-                    throw new PageException("Unable to read content from [$contentFullPath]");
+                    throw new \RuntimeException("Unable to read content from [$contentFullPath]");
                 }
+                // @codeCoverageIgnoreEnd
             }
             else
             {
@@ -144,10 +146,12 @@ class Page
 
             closedir($dir);
         }
+        // @codeCoverageIgnoreStart
         else
         {
             throw new  PageException("Unable to read path");
         }
+        // @codeCoverageIgnoreEnd
 
         $this->scanAreas($dirPath . '/..');
     }
@@ -223,7 +227,7 @@ class Page
                 }
                 else
                 {
-                    throw new SitemapException(sprintf('Unable to read properties [%s].', $parentPropertiesFile));
+                    throw new SitemapException(sprintf('Unable to read properties [%s].', $parentFinder->getPath()));
                 }
                 $parentDir = realpath($parentDir . '/..');
             }

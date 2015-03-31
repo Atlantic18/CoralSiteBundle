@@ -10,62 +10,65 @@ class PropertiesParser
     {
         $fileName = $finder->getPropertiesPath();
 
-        if(false === $fileName)
+        if(false !== $fileName)
         {
-            return $finder->createSortorderFromFileList();
-        }
+            $handle   = @fopen($fileName, "r");
+            $parsed   = array('name' => '', 'properties' => array());
 
-        $handle   = @fopen($fileName, "r");
-        $parsed   = array('name' => '', 'properties' => array());
-
-        if($handle)
-        {
-            while(($buffer = fgets($handle, 4096)) !== false)
+            if($handle)
             {
-                $buffer = trim($buffer);
-                if($buffer)
+                while(($buffer = fgets($handle, 4096)) !== false)
                 {
-                    if(!$parsed['name'])
+                    $buffer = trim($buffer);
+                    if($buffer)
                     {
-                        $parsed['name'] = $buffer;
-                    }
-                    else
-                    {
-                        if(($pos = strpos($buffer, ':')) !== false)
+                        if(!$parsed['name'])
                         {
-                            $key = trim(substr($buffer, 0, $pos));
-                            $value = trim(substr($buffer, $pos + 1));
-
-                            if($value[0] == '"' && substr($value, -1) != '"')
-                            {
-                                throw new PropertiesParserException("Invalid quotation when parsing key:value in [$fileName]");
-                            }
-
-                            if(!preg_match('/^[a-z0-9_]+$/i', $key))
-                            {
-                                throw new PropertiesParserException("Invalid key [$key] when parsing key:value in [$fileName]");
-                            }
-
-                            $parsed['properties'][$key] = trim($value, '"');
+                            $parsed['name'] = $buffer;
                         }
                         else
                         {
-                            throw new PropertiesParserException("Missing ':' when parsing key:value in [$fileName]");
+                            if(($pos = strpos($buffer, ':')) !== false)
+                            {
+                                $key = trim(substr($buffer, 0, $pos));
+                                $value = trim(substr($buffer, $pos + 1));
+
+                                if($value[0] == '"' && substr($value, -1) != '"')
+                                {
+                                    throw new PropertiesParserException("Invalid quotation when parsing key:value in [$fileName]");
+                                }
+
+                                if(!preg_match('/^[a-z0-9_]+$/i', $key))
+                                {
+                                    throw new PropertiesParserException("Invalid key [$key] when parsing key:value in [$fileName]");
+                                }
+
+                                $parsed['properties'][$key] = trim($value, '"');
+                            }
+                            else
+                            {
+                                throw new PropertiesParserException("Missing ':' when parsing key:value in [$fileName]");
+                            }
                         }
                     }
                 }
-            }
-            if(!$parsed['name'])
-            {
-                throw new PropertiesParserException("Missing first line in properties in [$fileName]");
-            }
-            if(!feof($handle))
-            {
-                throw new \LogicException("Unexpected fgets() fail [$fileName]");
-            }
-            fclose($handle);
+                if(!$parsed['name'])
+                {
+                    throw new PropertiesParserException("Missing first line in properties in [$fileName]");
+                }
+                // @codeCoverageIgnoreStart
+                if(!feof($handle))
+                {
+                    throw new \LogicException("Unexpected fgets() fail [$fileName]");
+                }
+                // @codeCoverageIgnoreEnd
+                fclose($handle);
 
-            return $parsed;
+                return $parsed;
+            }
+            // @codeCoverageIgnoreStart
+            throw new \RuntimeException("Unable to open [$fileName]");
+            // @codeCoverageIgnoreEnd
         }
 
         throw new \InvalidArgumentException("Unable to read [$fileName]");

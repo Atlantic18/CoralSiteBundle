@@ -7,6 +7,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Coral\SiteBundle\DependencyInjection\CoralSiteExtension;
 use Coral\SiteBundle\DependencyInjection\FilterCompilerPass;
 
+/**
+ * Coral Site Bundle
+ *
+ * @codeCoverageIgnore
+ */
 class CoralSiteBundle extends Bundle
 {
     public function build(ContainerBuilder $container)

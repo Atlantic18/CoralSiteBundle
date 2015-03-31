@@ -6,6 +6,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ *
+ * @codeCoverageIgnore
+ */
 class FilterCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)

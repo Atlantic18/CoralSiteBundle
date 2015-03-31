@@ -26,10 +26,12 @@ class SortorderParser
                         $parsed[] = $buffer;
                     }
                 }
+                // @codeCoverageIgnoreStart
                 if(!feof($handle))
                 {
-                    throw new \LogicException("Unexpected fgets() fail [$fileName]");
+                    throw new \RuntimeException("Unexpected fgets() fail [$fileName]");
                 }
+                // @codeCoverageIgnoreEnd
                 fclose($handle);
 
                 if(!count($parsed))
@@ -39,6 +41,10 @@ class SortorderParser
 
                 return $parsed;
             }
+
+            // @codeCoverageIgnoreStart
+            throw new \RuntimeException("Unable to open [$fileName]");
+            // @codeCoverageIgnoreEnd
         }
         else
         {

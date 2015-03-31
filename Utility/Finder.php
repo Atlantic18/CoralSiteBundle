@@ -51,6 +51,9 @@ class Finder
 
                 return $sortorder;
             }
+            // @codeCoverageIgnoreStart
+            throw new \RuntimeException("Unable to access directory: " . $this->path);
+            // @codeCoverageIgnoreEnd
         }
         throw new \InvalidArgumentException("Unable to read sortorder");
     }

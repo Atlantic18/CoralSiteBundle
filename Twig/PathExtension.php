@@ -19,6 +19,9 @@ class PathExtension extends \Twig_Extension
         $this->requestStack = $requestStack;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getFunctions()
     {
         return array(

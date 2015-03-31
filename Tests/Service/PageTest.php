@@ -117,4 +117,36 @@ class PageTest extends WebTestCase
         $this->assertContains('Lorem Ipsum', $page->getArea('empty')->getContentByIndex(0)->getContent(), 'Content is filled in empty area without sortorder');
         $this->assertFalse($page->hasArea('foo'), 'Location doesn\'t have foo area');
     }
+
+    /**
+     * @expectedException Coral\SiteBundle\Exception\PageException
+     */
+    public function testInvalid()
+    {
+        $this->createRequestStack('/invalid');
+        $page = $this->getContainer()->get('coral.page');
+        $page->getArea('main');
+    }
+
+    /**
+     * @expectedException Coral\SiteBundle\Exception\PageException
+     */
+    public function testInvalidArea()
+    {
+        $this->createRequestStack('/invalid');
+        $page = $this->getContainer()->get('coral.page');
+        $page->getArea('invalid_area');
+    }
+
+    /**
+     * @expectedException Coral\SiteBundle\Exception\SitemapException
+     */
+    public function testInvalidParentValidChild()
+    {
+        $this->createRequestStack('/invalid_parent/valid_child');
+        $page = $this->getContainer()->get('coral.page');
+        $page->getArea('invalid_area');
+
+        $this->assertEquals('Products', $page->getNode()->getName());
+    }
 }

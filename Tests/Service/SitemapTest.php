@@ -96,12 +96,15 @@ class SitemapTest extends WebTestCase
         $this->assertEquals('Buy Now', $buyNow->getName());
         $this->assertEquals('/buy-now', $buyNow->getUri());
         $this->assertFalse($buyNow->hasProperty('keywords'));
+        $this->assertEquals('default', $buyNow->getProperty('keywords', 'default'));
         $this->assertFalse($buyNow->hasProperty('description'));
+        $this->assertCount(2, $buyNow->getAllProperties());
+        $this->assertEquals('https://store.acme.com', $buyNow->getProperty('redirect'));
         $this->assertEquals('::default.html.twig', $buyNow->getProperty('template'));
         $this->assertEquals('::default.html.twig', $buyNow->getProperty('tree_template'));
-        $this->assertEquals('https://store.acme.com', $buyNow->getProperty('redirect'));
 
         $this->assertTrue(null === $root->getChildByIndex(4));
+        $this->assertCount(4, $root->getChildren(4));
     }
 
     public function testCache()
