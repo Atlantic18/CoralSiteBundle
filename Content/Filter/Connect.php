@@ -26,12 +26,13 @@ class Connect implements FilterInterface
     public function render($input)
     {
         $params   = new JsonParser($input);
-        $response = $this->connector->connect(
-            $params->getMandatoryParam('service'),
-            $params->getMandatoryParam('method'),
-            $params->getMandatoryParam('uri'),
-            $params->getOptionalParam('payload')
-        );
+        $response = $this->connector
+            ->to($params->getMandatoryParam('service'))
+            ->doRequest(
+                $params->getMandatoryParam('method'),
+                $params->getMandatoryParam('uri'),
+                $params->getOptionalParam('payload')
+            );
 
         return $this->twig->render(
             $params->getMandatoryParam('template'),

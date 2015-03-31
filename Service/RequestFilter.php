@@ -19,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Coral\SiteBundle\Utility\Finder;
 use Coral\CoreBundle\Controller\JsonController;
 use Coral\CoreBundle\Exception\JsonException;
 use Coral\CoreBundle\Exception\AuthenticationException;
@@ -58,32 +59,30 @@ class RequestFilter implements EventSubscriberInterface
      * @param  string  $contentPath Root content path
      * @return boolean              True if property file exists
      */
-    public static function getPropertyFileName(Request $request, $contentPath)
+    public static function getFinder(Request $request, $contentPath)
     {
         $requestUri = $request->getPathInfo();
+        //Reject paths with . and ?
+        if(false !== (strpos($requestUri, '.') && strpos($requestUri, '?')))
+        {
+            return false;
+        }
 
         if($requestUri == '/')
         {
-            $propertiesFile = $contentPath . DIRECTORY_SEPARATOR . '.properties';
-        }
-        else
-        {
-            $propertiesFile = $contentPath . $requestUri . DIRECTORY_SEPARATOR . '.properties';
+            return new Finder($contentPath);
         }
 
-        if((false === (strpos($requestUri, '.') && strpos($requestUri, '?'))) && file_exists($propertiesFile))
-        {
-            return $propertiesFile;
-        }
-
-        return false;
+        return new Finder($contentPath . $requestUri);
+        return $finder->getPropertiesPath();
     }
 
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
 
-        if(false !== self::getPropertyFileName($request, $this->contentPath))
+        $finder = self::getFinder($request, $this->contentPath);
+        if(false !== $finder->getPropertiesPath())
         {
             if (null !== $this->logger)
             {

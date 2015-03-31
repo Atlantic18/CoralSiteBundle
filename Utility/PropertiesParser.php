@@ -1,15 +1,22 @@
 <?php
 
-namespace Coral\SiteBundle\Parser;
+namespace Coral\SiteBundle\Utility;
 
 use Coral\SiteBundle\Exception\PropertiesParserException;
 
 class PropertiesParser
 {
-    public static function parse($fileName)
+    public static function parse(Finder $finder)
     {
-        $handle = @fopen($fileName, "r");
-        $parsed = array('name' => '', 'properties' => array());
+        $fileName = $finder->getPropertiesPath();
+
+        if(false === $fileName)
+        {
+            return $finder->createSortorderFromFileList();
+        }
+
+        $handle   = @fopen($fileName, "r");
+        $parsed   = array('name' => '', 'properties' => array());
 
         if($handle)
         {

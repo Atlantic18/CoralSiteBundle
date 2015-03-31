@@ -113,7 +113,8 @@ class PageTest extends WebTestCase
         $this->assertEquals('html', $page->getArea('footer')->getContentByIndex(0)->getType(), 'HTML content type properly read');
         $this->assertContains('Different', $page->getArea('footer')->getContentByIndex(0)->getContent(), 'Content is filled');
         $this->assertTrue($page->hasArea('empty'), 'Location has empty area');
-        $this->assertTrue($page->getArea('empty')->isEmpty(), 'Location empty area is really empty');
+        $this->assertFalse($page->getArea('empty')->isEmpty(), 'Location empty area is really empty');
+        $this->assertContains('Lorem Ipsum', $page->getArea('empty')->getContentByIndex(0)->getContent(), 'Content is filled in empty area without sortorder');
         $this->assertFalse($page->hasArea('foo'), 'Location doesn\'t have foo area');
     }
 }

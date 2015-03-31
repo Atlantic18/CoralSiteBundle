@@ -5,9 +5,10 @@ namespace Coral\SiteBundle\Service;
 use Coral\SiteBundle\Content\Area;
 use Coral\SiteBundle\Content\Content;
 use Coral\SiteBundle\Content\Node;
-use Coral\SiteBundle\Parser\PropertiesParser;
+use Coral\SiteBundle\Utility\PropertiesParser;
+use Coral\SiteBundle\Utility\SortorderParser;
+use Coral\SiteBundle\Utility\Finder;
 use Coral\SiteBundle\Exception\PageException;
-use Coral\SiteBundle\Parser\SortorderParser;
 use Coral\SiteBundle\Service\RequestFilter;
 use Coral\SiteBundle\Exception\SitemapException;
 
@@ -62,30 +63,28 @@ class Page
      */
     private function fillArea(Area $area, $path)
     {
-        $sortorderFileName  = $path . DIRECTORY_SEPARATOR . '.sortorder';
+        $finder = new Finder($path);
 
-        if(file_exists($sortorderFileName))
+        foreach (SortorderParser::parse($finder) as $subPath)
         {
-            foreach (SortorderParser::parse($sortorderFileName) as $subPath)
+            $contentFullPath = $path . DIRECTORY_SEPARATOR . $subPath;
+            if(file_exists($contentFullPath))
             {
-                $contentFullPath = $path . DIRECTORY_SEPARATOR . $subPath;
-                if(file_exists($contentFullPath))
-                {
-                    $type = substr($subPath, strrpos($subPath, '.') + 1);
+                //Detect file extension
+                $type = substr($subPath, strrpos($subPath, '.') + 1);
 
-                    if($fileContent = @file_get_contents($contentFullPath))
-                    {
-                        $area->addContentAsLast(new Content($type, $fileContent));
-                    }
-                    else
-                    {
-                        throw new PageException("Unable to read content from [$contentFullPath]");
-                    }
+                if($fileContent = @file_get_contents($contentFullPath))
+                {
+                    $area->addContentAsLast(new Content($type, $fileContent));
                 }
                 else
                 {
-                    throw new  PageException("Unable to find content at [$contentFullPath]");
+                    throw new PageException("Unable to read content from [$contentFullPath]");
                 }
+            }
+            else
+            {
+                throw new  PageException("Unable to find content at [$contentFullPath]");
             }
         }
     }
@@ -110,7 +109,7 @@ class Page
             while (($subDirName = readdir($dir)) !== false)
             {
                 if(
-                    (substr($subDirName, 0, 1) == '.') &&
+                    ((substr($subDirName, 0, 1) == '.') || (substr($subDirName, 0, 1) == '_')) &&
                     $subDirName != '.' &&
                     $subDirName != '..' &&
                     is_dir($dirPath . DIRECTORY_SEPARATOR . $subDirName)
@@ -120,7 +119,7 @@ class Page
                     if(realpath($realContentPath . $this->getNode()->getUri()) == $dirPath)
                     {
                         //normalize area name
-                        $areaName = (substr($areaName, 0, 6) == '.tree_') ? substr($areaName, 6) : substr($areaName, 1);
+                        $areaName = (substr($areaName, 1, 5) == 'tree_') ? substr($areaName, 6) : substr($areaName, 1);
                         $area = new Area($areaName, false);
                         $this->areas[$areaName] = $area;
                         $this->fillArea($area, $dirPath . DIRECTORY_SEPARATOR . $subDirName);
@@ -128,7 +127,7 @@ class Page
                     //Searching for areas to inherit only
                     else
                     {
-                        if(substr($areaName, 0, 6) == '.tree_')
+                        if(substr($areaName, 1, 5) == 'tree_')
                         {
                             $areaName = substr($areaName, 6);
 
@@ -191,10 +190,11 @@ class Page
     private function readNode()
     {
         $request = $this->requestStack->getCurrentRequest();
+        $finder  = RequestFilter::getFinder($request, $this->contentPath);
 
-        if(false !== ($propertiesFileName = RequestFilter::getPropertyFileName($request, $this->contentPath)))
+        if(false !== $finder->getPropertiesPath())
         {
-            $properties = PropertiesParser::parse($propertiesFileName);
+            $properties = PropertiesParser::parse($finder);
             $node = new Node($properties['name'], $request->getPathInfo());
 
             //Set properties
@@ -205,14 +205,14 @@ class Page
 
             //Read properties from parent nodes
             $realContentPath = realpath($this->contentPath);
-            $parentDir = realpath(dirname($propertiesFileName));
+            $parentDir = realpath(dirname($finder->getPropertiesPath()));
 
             while(strcmp($realContentPath, $parentDir) <= 0)
             {
-                $parentPropertiesFile = $parentDir . '/.properties';
-                if(file_exists($parentPropertiesFile))
+                $parentFinder = new Finder($parentDir);
+                if(false !== $parentFinder->getPropertiesPath())
                 {
-                    $properties = PropertiesParser::parse($parentPropertiesFile);
+                    $properties = PropertiesParser::parse($parentFinder);
                     foreach($properties['properties'] as $key => $value)
                     {
                         if((substr($key, 0, 5) == 'tree_') && !$node->hasProperty($key))

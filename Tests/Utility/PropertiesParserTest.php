@@ -1,8 +1,9 @@
 <?php
 
-namespace Coral\SiteBundle\Tests\Parser;
+namespace Coral\SiteBundle\Tests\Utility;
 
-use Coral\SiteBundle\Parser\PropertiesParser;
+use Coral\SiteBundle\Utility\Finder;
+use Coral\SiteBundle\Utility\PropertiesParser;
 
 class PropertiesParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,7 +12,8 @@ class PropertiesParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidFileException()
     {
-        PropertiesParser::parse('invalid_filename');
+        $finder = new Finder('invalid_filename');
+        PropertiesParser::parse($finder);
     }
 
     /**
@@ -19,7 +21,8 @@ class PropertiesParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testEmptyPropertiesException()
     {
-        PropertiesParser::parse(dirname(__FILE__) . '/../Resources/fixtures/.empty_properties');
+        $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/empty');
+        PropertiesParser::parse($finder);
     }
 
     /**
@@ -27,7 +30,8 @@ class PropertiesParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidPropertiesException()
     {
-        PropertiesParser::parse(dirname(__FILE__) . '/../Resources/fixtures/.invalid_properties');
+        $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/invalid');
+        PropertiesParser::parse($finder);
     }
 
     /**
@@ -35,7 +39,8 @@ class PropertiesParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidPropertiesKeyException()
     {
-        PropertiesParser::parse(dirname(__FILE__) . '/../Resources/fixtures/.invalid_properties_key');
+        $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/invalid_key');
+        PropertiesParser::parse($finder);
     }
 
     /**
@@ -43,12 +48,14 @@ class PropertiesParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidPropertiesKeyValueException()
     {
-        PropertiesParser::parse(dirname(__FILE__) . '/../Resources/fixtures/.invalid_properties_key_value');
+        $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/invalid_value');
+        PropertiesParser::parse($finder);
     }
 
     public function testParse()
     {
-        $properties = PropertiesParser::parse(dirname(__FILE__) . '/../Resources/fixtures/.properties');
+        $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/correct');
+        $properties = PropertiesParser::parse($finder);
 
         $this->assertTrue(is_array($properties));
         $this->assertCount(2, $properties);

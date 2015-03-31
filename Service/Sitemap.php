@@ -3,8 +3,9 @@
 namespace Coral\SiteBundle\Service;
 
 use Coral\SiteBundle\Content\Node;
-use Coral\SiteBundle\Parser\PropertiesParser;
-use Coral\SiteBundle\Parser\SortorderParser;
+use Coral\SiteBundle\Utility\PropertiesParser;
+use Coral\SiteBundle\Utility\SortorderParser;
+use Coral\SiteBundle\Utility\Finder;
 use Doctrine\Common\Cache\Cache;
 
 class Sitemap
@@ -37,34 +38,30 @@ class Sitemap
      */
     private function readNode($path)
     {
-        $propertiesFileName = $path . DIRECTORY_SEPARATOR . '.properties';
-        $sortorderFileName  = $path . DIRECTORY_SEPARATOR . '.sortorder';
+        $finder = new Finder($path);
 
-        if(file_exists($propertiesFileName))
+        if(false !== $finder->getPropertiesPath())
         {
             $uri = str_replace($this->contentPath, '', $path);
             $uri = $uri ? $uri : '/';
-            $properties = PropertiesParser::parse($propertiesFileName);
+            $properties = PropertiesParser::parse($finder);
             $node = new Node($properties['name'], $uri);
 
             //Add child nodes and link references
-            if(file_exists($sortorderFileName))
+            $index = 0;
+            foreach (SortorderParser::parse($finder) as $subPath)
             {
-                $index = 0;
-                foreach (SortorderParser::parse($sortorderFileName) as $subPath)
+                $child = $this->readNode($path . DIRECTORY_SEPARATOR . $subPath);
+                $node->addChildAsLast($child);
+                $child->setParent($node);
+
+                if($index)
                 {
-                    $child = $this->readNode($path . DIRECTORY_SEPARATOR . $subPath);
-                    $node->addChildAsLast($child);
-                    $child->setParent($node);
-
-                    if($index)
-                    {
-                        $child->setPrev($node->getChildByIndex($index - 1));
-                        $node->getChildByIndex($index - 1)->setNext($child);
-                    }
-
-                    $index++;
+                    $child->setPrev($node->getChildByIndex($index - 1));
+                    $node->getChildByIndex($index - 1)->setNext($child);
                 }
+
+                $index++;
             }
 
             //Set properties and set tree_ properties to nodes
@@ -76,7 +73,7 @@ class Sitemap
             return $node;
         }
 
-        throw new \Coral\SiteBundle\Exception\SitemapException("Unable to find properties for: [$propertiesFileName]");
+        throw new \Coral\SiteBundle\Exception\SitemapException("Unable to find properties for: [$path]");
     }
 
     /**
