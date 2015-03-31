@@ -89,7 +89,9 @@ class Sitemap
 
             if(!$this->cache->save($cacheKey, $root))
             {
+                // @codeCoverageIgnoreStart
                 throw new \Coral\SiteBundle\Exception\SitemapException("Unable to store into cache.");
+                // @codeCoverageIgnoreEnd
             }
         }
 

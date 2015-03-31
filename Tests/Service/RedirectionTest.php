@@ -24,6 +24,30 @@ class RedirectionTest extends WebTestCase
         new Redirection('invalid_path');
     }
 
+    /**
+     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
+     */
+    public function testEmptyFile()
+    {
+        new Redirection(dirname(__FILE__) . '/../Resources/fixtures/redirection/empty');
+    }
+
+    /**
+     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
+     */
+    public function testMissingKey()
+    {
+        new Redirection(dirname(__FILE__) . '/../Resources/fixtures/redirection/missing_key');
+    }
+
+    /**
+     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
+     */
+    public function testInvalidEntry()
+    {
+        new Redirection(dirname(__FILE__) . '/../Resources/fixtures/redirection/invalid_entry');
+    }
+
     public function testRedirections()
     {
         $redirection = $this->getContainer()->get('coral.redirection');

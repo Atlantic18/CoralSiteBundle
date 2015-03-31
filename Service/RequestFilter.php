@@ -63,7 +63,7 @@ class RequestFilter implements EventSubscriberInterface
     {
         $requestUri = $request->getPathInfo();
         //Reject paths with . and ?
-        if(false !== (strpos($requestUri, '.') && strpos($requestUri, '?')))
+        if(false !== (strpos($requestUri, '.') || strpos($requestUri, '?')))
         {
             return false;
         }
@@ -74,7 +74,6 @@ class RequestFilter implements EventSubscriberInterface
         }
 
         return new Finder($contentPath . $requestUri);
-        return $finder->getPropertiesPath();
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -82,7 +81,7 @@ class RequestFilter implements EventSubscriberInterface
         $request = $event->getRequest();
 
         $finder = self::getFinder($request, $this->contentPath);
-        if(false !== $finder->getPropertiesPath())
+        if(false !== ($finder && $finder->getPropertiesPath()))
         {
             if (null !== $this->logger)
             {
@@ -97,6 +96,9 @@ class RequestFilter implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getSubscribedEvents()
     {
         return array(

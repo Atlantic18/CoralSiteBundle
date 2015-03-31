@@ -1,0 +1,13 @@
+{
+    "redirections": [
+        {
+            "source": "/to-redirect",
+            "target": "/en",
+            "type": 301
+        },
+        {
+            "source": "/old-section/*",
+            "type": 302
+        }
+    ]
+}

@@ -19,7 +19,7 @@ class Redirection
         $filePath = $configPath . '/redirections.json';
         if((false === file_exists($filePath)) || (false === is_readable($filePath)))
         {
-            throw new ConfigurationException("File not found or not readable: [$configPath . '/redirections.json'].");
+            throw new ConfigurationException("File not found or not readable: [$configPath/redirections.json'].");
         }
         if(false !== ($string = file_get_contents($filePath)))
         {
@@ -27,22 +27,24 @@ class Redirection
 
             if(null === $redirections)
             {
-                throw new ConfigurationException("Unable to parse: [$configPath . '/redirections.json'].");
+                throw new ConfigurationException("Unable to parse: [$configPath/redirections.json'].");
             }
 
             if(!array_key_exists('redirections', $redirections))
             {
-                throw new ConfigurationException("Invalid redirections format missing key redirections in: [$configPath . '/redirections.json'].");
+                throw new ConfigurationException("Invalid redirections format missing key redirections in: [$configPath/redirections.json'].");
             }
 
             $this->redirections = $redirections['redirections'];
 
             $this->validateRedirections();
         }
+        // @codeCoverageIgnoreStart
         else
         {
-            throw new ConfigurationException("Unable to read: [$configPath . '/redirections.json'].");
+            throw new ConfigurationException("Unable to read: [$configPath/redirections.json'].");
         }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
