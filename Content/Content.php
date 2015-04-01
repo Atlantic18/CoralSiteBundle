@@ -19,6 +19,12 @@ class Content
      * @var string
      */
     private $content;
+    /**
+     * Path where the content is stored
+     *
+     * @var string
+     */
+    private $path;
 
     /**
      * Content constructor
@@ -26,10 +32,11 @@ class Content
      * @param string $type
      * @param string $content
      */
-    public function __construct($type, $content)
+    public function __construct($type, $content, $path = null)
     {
         $this->type    = $type;
         $this->content = $content;
+        $this->path    = $path;
     }
 
     /**
@@ -50,5 +57,15 @@ class Content
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Get Path
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 }

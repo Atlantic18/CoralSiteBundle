@@ -89,4 +89,56 @@ puts markdown.to_html
 
         $this->assertEquals('<h2>Test</h2>', $renderer->render($content));
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRenderIncludeInvalidOutside()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content(
+            'txt',
+            "Lorem Ipsum {{ include ../global_footer.markdown }}",
+            dirname(__FILE__) . '/../Resources/fixtures/AcmeContent/content/_tree_footer'
+        );
+        $renderer->render($content);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRenderWithIncludeInvalid()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('txt', "Lorem Ipsum {{ include _tree_footer/invalid }}");
+        $renderer->render($content);
+    }
+
+    public function testRenderWithInclude()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $correctResult = "Lorem Ipsum <p>Copyright information for all pages.</p>";
+
+        $content = new Content('txt', "Lorem Ipsum {{ include _tree_footer/global_footer.markdown }}");
+        $this->assertEquals($correctResult, trim($renderer->render($content)));
+
+        $content = new Content('txt', "Lorem Ipsum {{include _tree_footer/global_footer.markdown}}");
+        $this->assertEquals($correctResult, trim($renderer->render($content)));
+
+        $content = new Content(
+            'txt',
+            "Lorem Ipsum {{include global_footer.markdown}}",
+            dirname(__FILE__) . '/../Resources/fixtures/AcmeContent/content/_tree_footer'
+        );
+        $this->assertEquals($correctResult, trim($renderer->render($content)));
+
+        $content = new Content('txt', "Lorem Ipsum {{ include_tree_footer/global_footer.markdown }}");
+        $this->assertEquals(
+            "Lorem Ipsum {{ include_tree_footer/global_footer.markdown }}",
+            $renderer->render($content)
+        );
+    }
 }

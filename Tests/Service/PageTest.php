@@ -92,7 +92,8 @@ class PageTest extends WebTestCase
     public function testLocationPage()
     {
         $this->createRequestStack('/contact-us/location');
-        $page = $this->getContainer()->get('coral.page');
+        $page     = $this->getContainer()->get('coral.page');
+        $renderer = $this->getContainer()->get('coral.renderer');
 
         $this->assertTrue(null === $page->getNode()->parent());
         $this->assertTrue(null === $page->getNode()->prev());
@@ -116,6 +117,11 @@ class PageTest extends WebTestCase
         $this->assertFalse($page->getArea('empty')->isEmpty(), 'Location empty area is really empty');
         $this->assertContains('Lorem Ipsum', $page->getArea('empty')->getContentByIndex(0)->getContent(), 'Content is filled in empty area without sortorder');
         $this->assertFalse($page->hasArea('foo'), 'Location doesn\'t have foo area');
+
+        $this->assertEquals(
+            '<p>Different footer pure html.</p> <p><strong>included</strong></p>',
+            trim($renderer->render($page->getArea('footer')->getContentByIndex(0)))
+        );
     }
 
     /**

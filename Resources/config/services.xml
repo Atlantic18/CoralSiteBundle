@@ -45,7 +45,9 @@
         </service>
 
         <!-- Renderer configuration -->
-        <service id="coral.renderer" class="%coral.renderer.class%" />
+        <service id="coral.renderer" class="%coral.renderer.class%">
+            <argument>%coral.content.path%</argument>
+        </service>
 
         <service id="coral.filter.markdown" class="Coral\SiteBundle\Content\Filter\Markdown">
             <argument type="service" id="markdown.parser" />

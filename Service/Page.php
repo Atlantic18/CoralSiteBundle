@@ -75,7 +75,7 @@ class Page
 
                 if($fileContent = @file_get_contents($contentFullPath))
                 {
-                    $area->addContentAsLast(new Content($type, $fileContent));
+                    $area->addContentAsLast(new Content($type, $fileContent, $path));
                 }
                 // @codeCoverageIgnoreStart
                 else
