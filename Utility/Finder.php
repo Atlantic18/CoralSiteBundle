@@ -31,7 +31,9 @@ class Finder
     {
         if(file_exists($this->path))
         {
-            $files = scandir($this->path, SCANDIR_SORT_ASCENDING);
+            //SCANDIR_SORT_ASCENDING works for PHP 5.4 and above.
+            //Instead of using constant there is 0 for the time being.
+            $files = scandir($this->path, 0);
 
             if(false !== $files)
             {
