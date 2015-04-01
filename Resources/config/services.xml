@@ -51,10 +51,12 @@
             <argument type="service" id="markdown.parser" />
 
             <tag name="coral.renderer.filter" type="markdown" />
+            <tag name="coral.renderer.filter" type="md" />
         </service>
 
         <service id="coral.filter.passthru" class="Coral\SiteBundle\Content\Filter\Passthru">
             <tag name="coral.renderer.filter" type="html" />
+            <tag name="coral.renderer.filter" type="txt" />
         </service>
 
         <service id="coral.filter.connect" class="Coral\SiteBundle\Content\Filter\Connect">
