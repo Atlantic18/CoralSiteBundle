@@ -31,7 +31,7 @@ class Connect implements FilterInterface
             ->doRequest(
                 $params->getMandatoryParam('method'),
                 $params->getMandatoryParam('uri'),
-                $params->getOptionalParam('payload')
+                $params->getOptionalParam('payload', null)
             );
 
         return $this->twig->render(
