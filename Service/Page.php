@@ -51,7 +51,7 @@ class Page
     {
         $this->node         = null;
         $this->areas        = null;
-        $this->contentPath  = $contentPath;
+        $this->contentPath  = realpath($contentPath);
         $this->requestStack = $requestStack;
     }
 
@@ -99,9 +99,8 @@ class Page
     private function scanAreas($dirPath)
     {
         $dirPath = realpath($dirPath);
-        $realContentPath = realpath($this->contentPath);
 
-        if(strcmp($realContentPath, $dirPath) > 0)
+        if(strcmp($this->contentPath, $dirPath) > 0)
         {
             return;
         }
@@ -118,7 +117,7 @@ class Page
                 ) {
                     $areaName = $subDirName;
                     //Searching for all areas
-                    if(realpath($realContentPath . $this->getNode()->getUri()) == $dirPath)
+                    if(realpath($this->contentPath . $this->getNode()->getUri()) == $dirPath)
                     {
                         //normalize area name
                         $areaName = (substr($areaName, 1, 5) == 'tree_') ? substr($areaName, 6) : substr($areaName, 1);
@@ -191,15 +190,15 @@ class Page
      * @throws \Coral\SiteBundle\Exception\SitemapException in case .properties file is missing
      * @return Node
      */
-    private function readNode()
+    private function readNode(Finder $finder)
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $finder  = RequestFilter::getFinder($request, $this->contentPath);
+        $uri = str_replace($this->contentPath, '', $finder->getPath());
+        $uri = !$uri ? '/' : $uri;
 
         if(false !== $finder->getPropertiesPath())
         {
             $properties = PropertiesParser::parse($finder);
-            $node = new Node($properties['name'], $request->getPathInfo());
+            $node = new Node($properties['name'], $uri);
 
             //Set properties
             foreach($properties['properties'] as $key => $value)
@@ -208,10 +207,9 @@ class Page
             }
 
             //Read properties from parent nodes
-            $realContentPath = realpath($this->contentPath);
             $parentDir = realpath(dirname($finder->getPropertiesPath()));
 
-            while(strcmp($realContentPath, $parentDir) <= 0)
+            while(strcmp($this->contentPath, $parentDir) <= 0)
             {
                 $parentFinder = new Finder($parentDir);
                 if(false !== $parentFinder->getPropertiesPath())
@@ -235,7 +233,7 @@ class Page
             return $node;
         }
 
-        throw new SitemapException(sprintf('Unable to read node for request [%s].', $request->getPathInfo()));
+        throw new SitemapException(sprintf('Unable to read node for request [%s].', $uri));
     }
 
     /**
@@ -247,9 +245,21 @@ class Page
     {
         if(null === $this->node)
         {
-            $this->node = $this->readNode();
+            $request = $this->requestStack->getCurrentRequest();
+            $this->node = $this->readNode(RequestFilter::getFinder($request, $this->contentPath));
         }
 
         return $this->node;
+    }
+
+    /**
+     * Reset node that is set by RequestFilter. Hard
+     *
+     * @param Finder $finder
+     */
+    public function setNodeByUri($uri)
+    {
+        $finder     = new Finder($this->contentPath . $uri);
+        $this->node = $this->readNode($finder);
     }
 }

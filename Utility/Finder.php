@@ -8,7 +8,7 @@ class Finder
 
     public function __construct($path)
     {
-        $this->path = $path;
+        $this->path = realpath($path);
     }
 
     /**

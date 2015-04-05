@@ -15,6 +15,7 @@ use Coral\SiteBundle\Service\Page;
 use Coral\SiteBundle\Content\Node;
 use Coral\SiteBundle\Content\Area;
 use Coral\SiteBundle\Content\Content;
+use Coral\SiteBundle\Utility\Finder;
 use Coral\CoreBundle\Test\WebTestCase;
 
 class PageTest extends WebTestCase
@@ -61,6 +62,20 @@ class PageTest extends WebTestCase
         $this->assertEquals('footer', $page->getArea('footer')->getName(), 'Area name is properly set');
         $this->assertTrue($page->getArea('footer')->isInherited(), 'Contact-us has inherited footer area');
         $this->assertFalse($page->hasArea('foo'), 'Contact-us doesn\'t have foo area');
+    }
+
+    public function testContactUsPageByFinder()
+    {
+        $page = $this->getContainer()->get('coral.page');
+        $page->setNodeByUri('/contact-us');
+
+        $this->assertTrue(null !== $page->getNode(), 'Node is fetched properly');
+        $this->assertTrue(null === $page->getNode()->parent());
+        $this->assertTrue(null === $page->getNode()->prev());
+        $this->assertTrue(null === $page->getNode()->next());
+        $this->assertFalse($page->getNode()->hasChildren());
+        $this->assertEquals('Contact us', $page->getNode()->getName());
+        $this->assertEquals('/contact-us', $page->getNode()->getUri());
     }
 
     public function testHomepagePage()
@@ -131,6 +146,16 @@ class PageTest extends WebTestCase
     {
         $this->createRequestStack('/invalid');
         $page = $this->getContainer()->get('coral.page');
+        $page->getArea('main');
+    }
+
+    /**
+     * @expectedException Coral\SiteBundle\Exception\PageException
+     */
+    public function testInvalidByUri()
+    {
+        $page = $this->getContainer()->get('coral.page');
+        $page->setNodeByUri('/invalid');
         $page->getArea('main');
     }
 
