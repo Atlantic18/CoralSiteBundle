@@ -41,6 +41,38 @@ class RendererTest extends WebTestCase
         $this->assertEquals('<h2>Config Logger</h2>', trim($renderer->render($content)));
     }
 
+    public function testConnectorWithVariables()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('connect', json_encode(array(
+            'service'   => 'coral',
+            'method'    => 'GET',
+            'uri'       => '/v1/node/detail/published/config-logger',
+            'template'  => 'connect_test_variables.twig',
+            'variables' => array('foo' => 'bar', 'foo2' => 'bar2')
+        )));
+
+        $this->assertEquals('<h2>Config Logger</h2>foo:bar,foo2:bar2', trim($renderer->render($content)));
+    }
+
+    /**
+     * @expectedException \Twig_Error_Runtime
+     */
+    public function testConnectorMissingVariables()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('connect', json_encode(array(
+            'service'   => 'coral',
+            'method'    => 'GET',
+            'uri'       => '/v1/node/detail/published/config-logger',
+            'template'  => 'connect_test_variables.twig'
+        )));
+
+        $this->assertEquals('<h2>Config Logger</h2>foo:bar,foo2:bar2', trim($renderer->render($content)));
+    }
+
     public function testMarkdown()
     {
         $renderer = $this->getContainer()->get('coral.renderer');

@@ -34,9 +34,12 @@ class Connect implements FilterInterface
                 $params->getOptionalParam('payload', null)
             );
 
+        $variables = $params->getOptionalParam('variables', array());
+        $variables['response'] = $response;
+
         return $this->twig->render(
             $params->getMandatoryParam('template'),
-            array('response' => $response)
+            $variables
         );
     }
 }
