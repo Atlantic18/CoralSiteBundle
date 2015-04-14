@@ -173,4 +173,14 @@ puts markdown.to_html
             $renderer->render($content)
         );
     }
+
+    public function testRenderWithMultipleInclude()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $correctResult = "Lorem Ipsum <p>Copyright information for all pages.</p>\n<p>Copyright information for all pages.</p>";
+
+        $content = new Content('txt', "Lorem Ipsum {{ include _tree_footer/global_footer.markdown }}{{include _tree_footer/global_footer.markdown}}");
+        $this->assertEquals($correctResult, trim($renderer->render($content)));
+    }
 }

@@ -91,10 +91,14 @@ class Renderer
         }
 
         $renderedContent = $this->filters[$content->getType()]->render($content->getContent());
-        if(preg_match('/\{\{\s*(include)\s+([a-z0-9\_\-\.\/]+)\s*\}\}/i', $renderedContent, $matches))
+        if(preg_match_all('/\{\{\s*(include)\s+([a-z0-9\_\-\.\/]+)\s*\}\}/i', $renderedContent, $matches))
         {
-            $includedContent = $this->renderIncludeForContent($content, $matches[2]);
-            $renderedContent = str_replace($matches[0], $includedContent, $renderedContent);
+            $matchesCount = count($matches[0]);
+            for($i = 0; $i < $matchesCount; $i++)
+            {
+                $includedContent = $this->renderIncludeForContent($content, $matches[2][$i]);
+                $renderedContent = str_replace($matches[0][$i], $includedContent, $renderedContent);
+            }
         }
 
         return $renderedContent;
