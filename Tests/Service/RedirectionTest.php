@@ -60,5 +60,8 @@ class RedirectionTest extends WebTestCase
 
         $this->assertTrue($redirection->hasRedirect('/old-section/some/document'));
         $this->assertEquals(array('/new-section/some/document', 302), $redirection->getRedirect('/old-section/some/document'));
+
+        $this->assertTrue($redirection->hasRedirect('/wildcard/something-here'));
+        $this->assertEquals(array('/en/wildcard/something-here', 301), $redirection->getRedirect('/wildcard/something-here'));
     }
 }

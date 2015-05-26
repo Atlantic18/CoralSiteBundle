@@ -96,7 +96,7 @@ class Redirection
                 if(substr($source, 0, $wildcardPos) == substr($redirection['source'], 0, $wildcardPos))
                 {
                     return array(
-                        substr($redirection['target'], 0, $wildcardPos) . substr($source, $wildcardPos),
+                        rtrim($redirection['target'], '*') . substr($source, $wildcardPos),
                         $redirection['type']
                     );
                 }

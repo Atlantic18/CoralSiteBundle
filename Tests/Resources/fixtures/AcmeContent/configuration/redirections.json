@@ -9,6 +9,11 @@
             "source": "/old-section/*",
             "target": "/new-section/*",
             "type": 302
+        },
+        {
+            "source": "/wildcard/*",
+            "target": "/en/wildcard/*",
+            "type": 301
         }
     ]
 }
