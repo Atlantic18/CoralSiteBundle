@@ -87,6 +87,22 @@ class RequestFilter implements EventSubscriberInterface
             {
                 $this->logger->info(sprintf('Coral matched route [%s].', $request->getRequestUri()));
             }
+            if($request->attributes->has('_controller'))
+            {
+                /* Services.xml
+                 *
+                 * <service id="coral.listener.route_resolve" class="%coral.request_filter.class%">
+                 *   <argument>%coral.content.path%</argument>
+                 *   <argument type="service" id="logger"/>
+                 *   <argument type="service" id="coral.redirection"/>
+                 *
+                 *   <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="100" />
+                 * </service>
+                 */
+                throw new \Coral\SiteBundle\Exception\ConfigurationException(
+                    'Unable to change Coral controller, already set, please change services configuration priority.'
+                );
+            }
             $request->attributes->add(array('_controller' => 'CoralSiteBundle:Default:page'));
         }
 
