@@ -109,9 +109,6 @@ class DefaultControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isNotFound());
     }
 
-    /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testPageWhichIsPlaceholder()
     {
         $client  = static::createClient();
@@ -122,8 +119,7 @@ class DefaultControllerTest extends WebTestCase
             array(),
             array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
         );
-        // for some reason forced 404 exception can't be tested this way
-        // $this->assertTrue($client->getResponse()->isNotFound());
+        $this->assertTrue($client->getResponse()->isNotFound());
     }
 
     public function testPageTemplate()
