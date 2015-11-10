@@ -33,7 +33,13 @@ class RequestFilterTest extends WebTestCase
     public function testContactUs()
     {
         $client  = static::createClient();
-        $client->request('GET', '/products');
+        $client->request(
+            'GET',
+            '/contact-us',
+            array(),
+            array(),
+            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
+        );
 
         $this->assertTrue($client->getResponse()->isSuccessful());
     }

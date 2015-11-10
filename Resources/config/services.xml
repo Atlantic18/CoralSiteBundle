@@ -26,6 +26,9 @@
             <argument>%coral.content.path%</argument>
         </service>
 
+        <service id="coral.context" class="Symfony\Component\DependencyInjection\ParameterBag\ParameterBag">
+        </service>
+
         <service id="coral.page" class="%coral.page.class%">
             <argument type="service" id="request_stack"/>
             <argument>%coral.content.path%</argument>
@@ -38,6 +41,7 @@
         <!-- Inject content uris -->
         <service id="coral.listener.route_resolve" class="%coral.request_filter.class%">
             <argument>%coral.content.path%</argument>
+            <argument type="service" id="coral.context"/>
             <argument type="service" id="logger"/>
             <argument type="service" id="coral.redirection"/>
 
@@ -64,6 +68,7 @@
         <service id="coral.filter.connect" class="Coral\SiteBundle\Content\Filter\Connect">
             <argument type="service" id="coral.connector" />
             <argument type="service" id="twig" />
+            <argument type="service" id="coral.context"/>
 
             <tag name="coral.renderer.filter" type="connect" />
         </service>

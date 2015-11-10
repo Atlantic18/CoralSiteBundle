@@ -18,6 +18,7 @@ use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 use Coral\SiteBundle\Utility\Finder;
 use Coral\CoreBundle\Controller\JsonController;
@@ -44,12 +45,19 @@ class RequestFilter implements EventSubscriberInterface
      * @var Redirection
      */
     private $redirection;
+    /**
+     * ParameterBag
+     *
+     * @var ParameterBag
+     */
+    private $context;
 
-    public function __construct($contentPath, LoggerInterface $logger = null, Redirection $redirection = null)
+    public function __construct($contentPath, ParameterBag $context, LoggerInterface $logger = null, Redirection $redirection = null)
     {
         $this->logger      = $logger;
         $this->contentPath = $contentPath;
         $this->redirection = $redirection;
+        $this->context     = $context;
     }
 
     /**
@@ -76,12 +84,80 @@ class RequestFilter implements EventSubscriberInterface
         return new Finder($contentPath . $requestUri);
     }
 
+    /**
+     * Overload this function in your RequestFilter
+     * implementation so you can add context based
+     * on your project
+     */
+    protected function customFillContext(Request $request)
+    {
+        //Place here code
+    }
+
+    /**
+     * Detect OS based on User-Agent header
+     *
+     * @return string
+     */
+    protected function getShortOsName(Request $request)
+    {
+        $os = strtolower($request->headers->get('User-Agent'));
+
+        if(false !== strpos($os, 'linux'))
+        {
+           return 'linux';
+        }
+
+        if((false !== strpos($os, 'macintosh')) || (false !== strpos($os, 'mac os x')))
+        {
+            return 'mac';
+        }
+
+        return 'windows';
+    }
+
+    /**
+     * Detect country based on IP
+     *
+     * @return string|null
+     */
+    protected function getCountry(Request $request)
+    {
+        if($request->headers->get('CF-IPCountry'))
+        {
+            return strtolower($request->headers->get('CF-IPCountry'));
+        }
+        if(is_callable('geoip_country_code_by_name'))
+        {
+            if($countryCode = @geoip_country_code_by_name($request->getClientIp()))
+            {
+                return strtolower($countryCode);
+            }
+        }
+
+        return null;
+    }
+
+    protected function fillContext(Request $request)
+    {
+        foreach($request->query->all() as $key => $value)
+        {
+            $this->context->set('request.query.' . $key, $value);
+        }
+        $this->context->set('request.os', $this->getShortOsName($request));
+        $this->context->set('request.country', $this->getCountry($request));
+
+        $this->customFillContext($request);
+    }
+
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
 
         if($event->isMasterRequest())
         {
+            $this->fillContext($request);
+
             $finder = self::getFinder($request, $this->contentPath);
             if(false !== ($finder && $finder->getPropertiesPath()))
             {

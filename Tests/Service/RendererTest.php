@@ -31,10 +31,12 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
+        $this->getContainer()->get('coral.context')->set('uri_param', 'published');
+
         $content = new Content('connect', json_encode(array(
             'service'  => 'coral',
             'method'   => 'GET',
-            'uri'      => '/v1/node/detail/published/config-logger',
+            'uri'      => '/v1/node/detail/%uri_param%/config-logger',
             'template' => 'connect_test.twig'
         )));
 

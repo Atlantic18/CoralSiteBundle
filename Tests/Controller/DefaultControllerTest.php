@@ -122,15 +122,26 @@ class DefaultControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isNotFound());
     }
 
-    public function testPageTemplate()
+    public function testConnectWithContext()
     {
         $client  = static::createClient();
-        $crawler = $client->request('GET', '/products');
+        $crawler = $client->request(
+            'GET',
+            '/products?param1=published',
+            array(),
+            array(),
+            array(
+                'HTTP_CF-IPCountry' => 'cs',
+                'HTTP_USER_AGENT'   => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.7 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.7',
+            )
+        );
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertEquals('Products', $crawler->filter('.main h1')->text());
 
         $this->assertEquals('Page Test', $crawler->filter('.page_test > h3')->text());
+
+        $this->assertEquals('Config Logger Mac', $crawler->filter('.main > h2')->text());
     }
 
     public function testPageAuthenticated()

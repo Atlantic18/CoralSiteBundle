@@ -1,0 +1,32 @@
+HTTP/1.1 200 OK
+Cache-Control: public,max-age=5
+Content-Type: text/html; charset=windows-1250
+Content-Encoding: gzip
+Vary: Accept-Encoding
+Server: Apache
+Date: Tue, 31 Mar 2015 05:15:51 GMT
+Connection: close
+
+{
+    "status": "ok",
+    "id": 1,
+    "name": "Config Logger Mac",
+    "slug": "config-logger",
+    "sections": [
+        {
+            "name": "body",
+            "items": [
+                {
+                    "permid": "abc123",
+                    "content": "Here is some text content",
+                    "renderer": "markdown"
+                },
+                {
+                    "permid": "abc234",
+                    "content": "{ \"coral\": { \"level\": \"debug\", \"notify\": \"sample@email.not\" } }",
+                    "renderer": "json"
+                }
+            ]
+        }
+    ]
+}
