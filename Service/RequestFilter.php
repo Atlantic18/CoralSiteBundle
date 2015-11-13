@@ -119,7 +119,7 @@ class RequestFilter implements EventSubscriberInterface
     /**
      * Detect country based on IP
      *
-     * @return string|null
+     * @return string
      */
     protected function getCountry(Request $request)
     {
@@ -135,7 +135,8 @@ class RequestFilter implements EventSubscriberInterface
             }
         }
 
-        return null;
+
+        return 'unknown';
     }
 
     protected function fillContext(Request $request)
