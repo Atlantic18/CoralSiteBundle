@@ -58,6 +58,30 @@ class RendererTest extends WebTestCase
         $this->assertEquals('<h2>Config Logger</h2>foo:bar,foo2:bar2', trim($renderer->render($content)));
     }
 
+    public function testConnectorWithLocalTwigTemplate()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('connect', json_encode(array(
+            'service'   => 'coral',
+            'method'    => 'GET',
+            'uri'       => '/v1/node/detail/published/config-logger',
+            'template'  => '@coral/.main/_connect_custom_template.twig',
+            'variables' => array('foo' => 'bar', 'foo2' => 'bar2')
+        )));
+
+        $this->assertEquals('<h3>Config Logger</h3>foo:bar,foo2:bar2', trim($renderer->render($content)));
+    }
+
+    public function testTwig()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('twig', "{{ 1 + 2 }} = 3");
+
+        $this->assertEquals('3 = 3', trim($renderer->render($content)));
+    }
+
     /**
      * @expectedException \Twig_Error_Runtime
      */

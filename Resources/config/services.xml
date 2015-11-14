@@ -65,6 +65,18 @@
             <tag name="coral.renderer.filter" type="txt" />
         </service>
 
+        <!-- Twig needs to have string loader for coral.filter.Twig -->
+        <service id="twig.stringloader" class="Twig_Loader_String">
+            <tag name="twig.loader" />
+        </service>
+
+        <service id="coral.filter.twig" class="Coral\SiteBundle\Content\Filter\Twig">
+            <argument type="service" id="twig" />
+            <argument type="service" id="coral.context"/>
+
+            <tag name="coral.renderer.filter" type="twig" />
+        </service>
+
         <service id="coral.filter.connect" class="Coral\SiteBundle\Content\Filter\Connect">
             <argument type="service" id="coral.connector" />
             <argument type="service" id="twig" />
