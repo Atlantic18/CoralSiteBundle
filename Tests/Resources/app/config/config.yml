@@ -13,6 +13,12 @@ services:
         tags:
             -  { name: coral.connector.service, service: "coral" }
 
+twig:
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
+    paths:
+        "%kernel.root_dir%/../fixtures/AcmeContent/content": coral
+
 coral_site:
     content_path: %kernel.root_dir%/../fixtures/AcmeContent/content
     config_path: %kernel.root_dir%/../fixtures/AcmeContent/configuration
@@ -32,10 +38,6 @@ framework:
     router:
         resource: %kernel.root_dir%/config/routing.php
     default_locale: "en"
-
-twig:
-    debug:            %kernel.debug%
-    strict_variables: %kernel.debug%
 
 monolog:
     handlers:
