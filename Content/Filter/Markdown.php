@@ -2,25 +2,28 @@
 
 namespace Coral\SiteBundle\Content\Filter;
 
+use Coral\SiteBundle\Content\Content;
 use Knp\Bundle\MarkdownBundle\MarkdownParserInterface;
 
-class Markdown implements FilterInterface
+class Markdown extends AbstractContentFilter implements FilterInterface
 {
     private $markdownParser;
 
-    function __construct(MarkdownParserInterface $markdownParser)
+    function __construct(MarkdownParserInterface $markdownParser, $contentPath)
     {
         $this->markdownParser = $markdownParser;
+
+        $this->setContentPath($contentPath);
     }
 
     /**
-     * Convert input string to output
+     * Convert input Content to output
      *
-     * @param  string $input
+     * @param  Content $content
      * @return string
      */
-    public function render($input)
+    public function render(Content $content)
     {
-        return $this->markdownParser->transformMarkdown($input);
+        return $this->markdownParser->transformMarkdown($this->getFileContent($content));
     }
 }

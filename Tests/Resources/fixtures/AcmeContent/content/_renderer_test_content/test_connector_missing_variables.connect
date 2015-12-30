@@ -1,0 +1,6 @@
+{
+    "service":  "coral",
+    "method":   "GET",
+    "uri":      "/v1/node/detail/published/config-logger",
+    "template": "connect_test_variables.twig"
+}

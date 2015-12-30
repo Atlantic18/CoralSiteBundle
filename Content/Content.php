@@ -14,12 +14,6 @@ class Content
      */
     private $type;
     /**
-     * Content
-     *
-     * @var string
-     */
-    private $content;
-    /**
      * Path where the content is stored
      *
      * @var string
@@ -30,13 +24,20 @@ class Content
      * Content constructor
      *
      * @param string $type
-     * @param string $content
+     * @param string $path Path is relative to the coral content path can start either with / or be relative
      */
-    public function __construct($type, $content, $path = null)
+    public function __construct($type, $path)
     {
-        $this->type    = $type;
-        $this->content = $content;
-        $this->path    = $path;
+        $this->type = $type;
+
+        //In case the path doesn't contain starting /
+        //The path is not absolute, it's always within content path
+        if(substr($path, 0, 1) != "/")
+        {
+            $path = '/' . $path;
+        }
+
+        $this->path = $path;
     }
 
     /**
@@ -47,16 +48,6 @@ class Content
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Get Content
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
     }
 
     /**

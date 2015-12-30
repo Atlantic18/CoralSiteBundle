@@ -1,0 +1,6 @@
+{
+    "service":  "coral",
+    "method":   "GET",
+    "uri":      "/v1/node/detail/%uri_param%/config-logger",
+    "template": "CoralSiteBundle:Default:connector-generic.html.twig"
+}

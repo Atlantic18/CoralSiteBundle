@@ -39,10 +39,17 @@ class Renderer
         $baseName        = basename($fileName);
         $realContentPath = realpath($this->contentPath);
 
+        // Including a file from current directory
         if($directory == '.')
         {
-            $realDirectory = realpath($content->getPath());
+            $realDirectory = realpath($this->contentPath . DIRECTORY_SEPARATOR . dirname($content->getPath()));
         }
+        // Include a file based on relative path
+        elseif($directory[0] == '.')
+        {
+            $realDirectory = realpath($this->contentPath . DIRECTORY_SEPARATOR . dirname($content->getPath()) . DIRECTORY_SEPARATOR . $directory);
+        }
+        // Including a file based on absolute path
         else
         {
             $realDirectory = realpath($this->contentPath . DIRECTORY_SEPARATOR . $directory);
@@ -54,14 +61,13 @@ class Renderer
             if(file_exists($fullPath))
             {
                 $type = pathinfo($fullPath, PATHINFO_EXTENSION);
-                $text = @file_get_contents($fullPath);
-                return $this->render(new Content($type, $text, $realDirectory));
+                return $this->render(new Content($type, substr($fullPath, strlen($realContentPath))));
             }
 
             throw new \InvalidArgumentException("Include file [$fullPath] does not exist.");
         }
 
-        throw new \InvalidArgumentException("Unable to render [$realDirectory/$fileName]. It is outside of allowed content root path [$realContentPath].");
+        throw new \InvalidArgumentException($content->getPath() . "Unable to render [$realDirectory/$fileName]. It is outside of allowed content root path [$realContentPath].");
     }
 
     /**
@@ -90,7 +96,8 @@ class Renderer
             );
         }
 
-        $renderedContent = $this->filters[$content->getType()]->render($content->getContent());
+        $renderedContent = $this->filters[$content->getType()]->render($content);
+
         if(preg_match_all('/\{\{\s*(include)\s+([a-z0-9\_\-\.\/]+)\s*\}\}/i', $renderedContent, $matches))
         {
             $matchesCount = count($matches[0]);

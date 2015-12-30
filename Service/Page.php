@@ -73,16 +73,12 @@ class Page
                 //Detect file extension
                 $type = substr($subPath, strrpos($subPath, '.') + 1);
 
-                if($fileContent = @file_get_contents($contentFullPath))
-                {
-                    $area->addContentAsLast(new Content($type, $fileContent, $path));
-                }
-                // @codeCoverageIgnoreStart
-                else
-                {
-                    throw new \RuntimeException("Unable to read content from [$contentFullPath]");
-                }
-                // @codeCoverageIgnoreEnd
+                $area->addContentAsLast(
+                    new Content(
+                        $type,
+                        substr($contentFullPath, strlen($this->contentPath))
+                    )
+                );
             }
             else
             {

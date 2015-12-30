@@ -1,0 +1,1 @@
+Copyright information for all pages.

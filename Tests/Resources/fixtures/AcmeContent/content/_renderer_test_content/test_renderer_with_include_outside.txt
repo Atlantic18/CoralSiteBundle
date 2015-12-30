@@ -1,0 +1,1 @@
+Lorem Ipsum {{ include ../../configuration/redirections.json }}

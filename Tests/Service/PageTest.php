@@ -95,9 +95,9 @@ class PageTest extends WebTestCase
         $this->assertFalse($page->getArea('main')->isInherited(), 'Homepage main is not inherited area');
         $this->assertTrue($page->getArea('main')->getContentByIndex(0) instanceof Content, 'Content is instanceof Content');
         $this->assertEquals('markdown', $page->getArea('main')->getContentByIndex(0)->getType(), 'Markdown content type properly read');
-        $this->assertContains('Nulla tincidunt quam dui.', $page->getArea('main')->getContentByIndex(0)->getContent(), 'Content is filled');
+        $this->assertContains('/.main/perex.markdown', $page->getArea('main')->getContentByIndex(0)->getPath(), 'Path is set');
         $this->assertEquals('html', $page->getArea('main')->getContentByIndex(1)->getType(), 'HTML content type properly read');
-        $this->assertContains('Fusce gravida mauris quam', $page->getArea('main')->getContentByIndex(1)->getContent(), 'Content is filled');
+        $this->assertContains('/.main/main_story.html', $page->getArea('main')->getContentByIndex(1)->getPath(), 'Path is set');
         $this->assertTrue($page->getArea('main')->getContentByIndex(2) === null);
         $this->assertTrue($page->hasArea('footer'), 'Homepage has footer area');
         $this->assertFalse($page->getArea('footer')->isInherited(), 'Homepage doesn\'t have inherited footer area');
@@ -127,10 +127,10 @@ class PageTest extends WebTestCase
         $this->assertFalse($page->getArea('footer')->isEmpty(), 'Location footer area is not empty');
         $this->assertEquals('footer', $page->getArea('footer')->getName(), 'Area name is properly set');
         $this->assertEquals('html', $page->getArea('footer')->getContentByIndex(0)->getType(), 'HTML content type properly read');
-        $this->assertContains('Different', $page->getArea('footer')->getContentByIndex(0)->getContent(), 'Content is filled');
+        $this->assertContains('/contact-us/location/.footer/footer.html', $page->getArea('footer')->getContentByIndex(0)->getPath(), 'Path is filled');
         $this->assertTrue($page->hasArea('empty'), 'Location has empty area');
         $this->assertFalse($page->getArea('empty')->isEmpty(), 'Location empty area is really empty');
-        $this->assertContains('Lorem Ipsum', $page->getArea('empty')->getContentByIndex(0)->getContent(), 'Content is filled in empty area without sortorder');
+        $this->assertContains('/contact-us/location/.empty/content.md', $page->getArea('empty')->getContentByIndex(0)->getPath(), 'Path is filled in empty area without sortorder');
         $this->assertFalse($page->hasArea('foo'), 'Location doesn\'t have foo area');
 
         $this->assertEquals(

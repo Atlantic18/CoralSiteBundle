@@ -2,20 +2,28 @@
 
 namespace Coral\SiteBundle\Content\Filter;
 
-class Passthru implements FilterInterface
+use Coral\SiteBundle\Content\Content;
+
+class Passthru extends AbstractContentFilter implements FilterInterface
 {
-    function __construct()
+    /**
+     * Content path - base path - for file content reading
+     *
+     * @param string $contentPath base path
+     */
+    function __construct($contentPath)
     {
+        $this->setContentPath($contentPath);
     }
 
     /**
      * Convert input string to output
      *
-     * @param  string $input
+     * @param  Content $content
      * @return string
      */
-    public function render($input)
+    public function render(Content $content)
     {
-        return $input;
+        return $this->getFileContent($content);
     }
 }

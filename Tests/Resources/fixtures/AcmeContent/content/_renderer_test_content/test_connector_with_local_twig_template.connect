@@ -1,0 +1,10 @@
+{
+    "service":  "coral",
+    "method":   "GET",
+    "uri":      "/v1/node/detail/published/config-logger",
+    "template": "@coral/.main/_connect_custom_template.twig",
+    "variables": {
+        "foo":  "bar",
+        "foo2": "bar2"
+    }
+}

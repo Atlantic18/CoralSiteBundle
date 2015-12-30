@@ -2,5 +2,5 @@
     "service":    "coral",
     "method":     "GET",
     "uri":        "/v1/node/detail/%request.query.param1%/config-logger-%request.os%-%request.country%",
-    "template":   "connect_test.twig"
+    "template":   "@coral/_renderer_test_content/connect_test.twig"
 }

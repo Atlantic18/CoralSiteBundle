@@ -2,8 +2,9 @@
 
 namespace Coral\SiteBundle\Content\Filter;
 
-use Twig_Environment as Environment;
+use Coral\SiteBundle\Content\Content;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Twig_Environment as Environment;
 
 class Twig implements FilterInterface
 {
@@ -19,11 +20,11 @@ class Twig implements FilterInterface
     /**
      * Convert input string to output
      *
-     * @param  string $input
+     * @param  Content $content
      * @return string
      */
-    public function render($input)
+    public function render(Content $content)
     {
-        return $this->twig->render($input, $this->context->all());
+        return $this->twig->render('@coral' . $content->getPath());
     }
 }

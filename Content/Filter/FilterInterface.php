@@ -2,13 +2,15 @@
 
 namespace Coral\SiteBundle\Content\Filter;
 
+use Coral\SiteBundle\Content\Content;
+
 interface FilterInterface
 {
     /**
-     * Convert input string to output
+     * Convert input Content to output
      *
-     * @param  string $input
+     * @param  Content $content
      * @return string
      */
-    public function render($input);
+    public function render(Content $content);
 }

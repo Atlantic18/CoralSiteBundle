@@ -55,19 +55,17 @@
 
         <service id="coral.filter.markdown" class="Coral\SiteBundle\Content\Filter\Markdown">
             <argument type="service" id="markdown.parser" />
+            <argument>%coral.content.path%</argument>
 
             <tag name="coral.renderer.filter" type="markdown" />
             <tag name="coral.renderer.filter" type="md" />
         </service>
 
         <service id="coral.filter.passthru" class="Coral\SiteBundle\Content\Filter\Passthru">
+            <argument>%coral.content.path%</argument>
+
             <tag name="coral.renderer.filter" type="html" />
             <tag name="coral.renderer.filter" type="txt" />
-        </service>
-
-        <!-- Twig needs to have string loader for coral.filter.Twig -->
-        <service id="twig.stringloader" class="Twig_Loader_String">
-            <tag name="twig.loader" />
         </service>
 
         <service id="coral.filter.twig" class="Coral\SiteBundle\Content\Filter\Twig">
@@ -81,6 +79,7 @@
             <argument type="service" id="coral.connector" />
             <argument type="service" id="twig" />
             <argument type="service" id="coral.context"/>
+            <argument>%coral.content.path%</argument>
 
             <tag name="coral.renderer.filter" type="connect" />
         </service>

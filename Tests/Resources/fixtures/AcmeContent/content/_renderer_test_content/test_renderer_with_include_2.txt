@@ -1,0 +1,1 @@
+Lorem Ipsum {{include ../_tree_footer/global_footer.markdown}}

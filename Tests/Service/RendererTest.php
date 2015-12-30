@@ -19,11 +19,22 @@ class RendererTest extends WebTestCase
     /**
      * @expectedException Coral\SiteBundle\Exception\RenderException
      */
-    public function testInvalid()
+    public function testInvalidType()
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('invalid', 'content');
+        $content = new Content('invalid', '_renderer_test_content/test_connector.connect');
+        $renderer->render($content);
+    }
+
+    /**
+     * @expectedException Coral\SiteBundle\Exception\RenderException
+     */
+    public function testInvalidFile()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('md', 'invalid file name');
         $renderer->render($content);
     }
 
@@ -33,27 +44,16 @@ class RendererTest extends WebTestCase
 
         $this->getContainer()->get('coral.context')->set('uri_param', 'published');
 
-        $content = new Content('connect', json_encode(array(
-            'service'  => 'coral',
-            'method'   => 'GET',
-            'uri'      => '/v1/node/detail/%uri_param%/config-logger',
-            'template' => 'connect_test.twig'
-        )));
+        $content = new Content('connect', '_renderer_test_content/test_connector.connect');
 
-        $this->assertEquals('<h2>Config Logger</h2>', trim($renderer->render($content)));
+        $this->assertContains('Config Logger', trim($renderer->render($content)));
     }
 
     public function testConnectorWithVariables()
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('connect', json_encode(array(
-            'service'   => 'coral',
-            'method'    => 'GET',
-            'uri'       => '/v1/node/detail/published/config-logger',
-            'template'  => 'connect_test_variables.twig',
-            'variables' => array('foo' => 'bar', 'foo2' => 'bar2')
-        )));
+        $content = new Content('connect', '/_renderer_test_content/test_connector_with_variables.connect');
 
         $this->assertEquals('<h2>Config Logger</h2>foo:bar,foo2:bar2', trim($renderer->render($content)));
     }
@@ -62,13 +62,7 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('connect', json_encode(array(
-            'service'   => 'coral',
-            'method'    => 'GET',
-            'uri'       => '/v1/node/detail/published/config-logger',
-            'template'  => '@coral/.main/_connect_custom_template.twig',
-            'variables' => array('foo' => 'bar', 'foo2' => 'bar2')
-        )));
+        $content = new Content('connect', '/_renderer_test_content/test_connector_with_local_twig_template.connect');
 
         $this->assertEquals('<h3>Config Logger</h3>foo:bar,foo2:bar2', trim($renderer->render($content)));
     }
@@ -77,7 +71,7 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('twig', "{{ 1 + 2 }} = 3");
+        $content = new Content('twig', '_renderer_test_content/test_twig.twig');
 
         $this->assertEquals('3 = 3', trim($renderer->render($content)));
     }
@@ -89,12 +83,7 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('connect', json_encode(array(
-            'service'   => 'coral',
-            'method'    => 'GET',
-            'uri'       => '/v1/node/detail/published/config-logger',
-            'template'  => 'connect_test_variables.twig'
-        )));
+        $content = new Content('connect', '/_renderer_test_content/test_connector_missing_variables.connect');
 
         $this->assertEquals('<h2>Config Logger</h2>foo:bar,foo2:bar2', trim($renderer->render($content)));
     }
@@ -103,7 +92,7 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('markdown', "## Header 2");
+        $content = new Content('markdown', '/_renderer_test_content/test_markdown.markdown');
 
         $this->assertEquals('<h2>Header 2</h2>', trim($renderer->render($content)));
     }
@@ -112,7 +101,7 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('md', "## Header 2");
+        $content = new Content('md', '_renderer_test_content/test_md.md');
 
         $this->assertEquals('<h2>Header 2</h2>', trim($renderer->render($content)));
     }
@@ -121,7 +110,7 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('txt', "Lorem Ipsum");
+        $content = new Content('txt', '_renderer_test_content/test_txt.txt');
 
         $this->assertEquals('Lorem Ipsum', trim($renderer->render($content)));
     }
@@ -130,11 +119,7 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('markdown', '```ruby
-require \'redcarpet\'
-markdown = Redcarpet.new("Hello World!")
-puts markdown.to_html
-```');
+        $content = new Content('markdown', '_renderer_test_content/test_markdown_flavored.markdown');
 
         $this->assertContains('<pre><code class="ruby">', trim($renderer->render($content)));
     }
@@ -143,7 +128,7 @@ puts markdown.to_html
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('html', "<h2>Test</h2>");
+        $content = new Content('html', '_renderer_test_content/test_html.html');
 
         $this->assertEquals('<h2>Test</h2>', $renderer->render($content));
     }
@@ -155,11 +140,7 @@ puts markdown.to_html
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content(
-            'txt',
-            "Lorem Ipsum {{ include ../global_footer.markdown }}",
-            dirname(__FILE__) . '/../Resources/fixtures/AcmeContent/content/_tree_footer'
-        );
+        $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_outside.txt');
         $renderer->render($content);
     }
 
@@ -170,7 +151,7 @@ puts markdown.to_html
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
-        $content = new Content('txt', "Lorem Ipsum {{ include _tree_footer/invalid }}");
+        $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_invalid.txt');
         $renderer->render($content);
     }
 
@@ -180,20 +161,16 @@ puts markdown.to_html
 
         $correctResult = "Lorem Ipsum <p>Copyright information for all pages.</p>";
 
-        $content = new Content('txt', "Lorem Ipsum {{ include _tree_footer/global_footer.markdown }}");
+        $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_1.txt');
         $this->assertEquals($correctResult, trim($renderer->render($content)));
 
-        $content = new Content('txt', "Lorem Ipsum {{include _tree_footer/global_footer.markdown}}");
+        $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_2.txt');
         $this->assertEquals($correctResult, trim($renderer->render($content)));
 
-        $content = new Content(
-            'txt',
-            "Lorem Ipsum {{include global_footer.markdown}}",
-            dirname(__FILE__) . '/../Resources/fixtures/AcmeContent/content/_tree_footer'
-        );
+        $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_3.txt');
         $this->assertEquals($correctResult, trim($renderer->render($content)));
 
-        $content = new Content('txt', "Lorem Ipsum {{ include_tree_footer/global_footer.markdown }}");
+        $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_4.txt');
         $this->assertEquals(
             "Lorem Ipsum {{ include_tree_footer/global_footer.markdown }}",
             $renderer->render($content)
@@ -206,7 +183,7 @@ puts markdown.to_html
 
         $correctResult = "Lorem Ipsum <p>Copyright information for all pages.</p>\n<p>Copyright information for all pages.</p>";
 
-        $content = new Content('txt', "Lorem Ipsum {{ include _tree_footer/global_footer.markdown }}{{include _tree_footer/global_footer.markdown}}");
+        $content = new Content('txt', '_renderer_test_content/test_renderer_with_multiple_include.txt');
         $this->assertEquals($correctResult, trim($renderer->render($content)));
     }
 }

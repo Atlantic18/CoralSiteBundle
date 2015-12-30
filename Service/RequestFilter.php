@@ -168,7 +168,6 @@ class RequestFilter implements EventSubscriberInterface
                 }
                 if($request->attributes->has('_controller'))
                 {
-                    var_dump($finder);die('error');
                     /* Services.xml
                      *
                      * <service id="coral.listener.route_resolve" class="%coral.request_filter.class%">
