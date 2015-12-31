@@ -34,7 +34,7 @@ class DefaultController extends Controller
         if(
             $page->getNode()->hasProperty('permission')
             &&
-            (false === $this->get('security.context')->isGranted($page->getNode()->getProperty('permission')))
+            (false === $this->get('security.authorization_checker')->isGranted($page->getNode()->getProperty('permission')))
         )
         {
             throw $this->createAccessDeniedException('Unable to access this page!');
