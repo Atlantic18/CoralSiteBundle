@@ -134,7 +134,7 @@ class RendererTest extends WebTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testRenderIncludeInvalidOutside()
     {
@@ -145,13 +145,24 @@ class RendererTest extends WebTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testRenderWithIncludeInvalid()
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
         $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_invalid.txt');
+        $renderer->render($content);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testRenderWithIncludeInvalid2()
+    {
+        $renderer = $this->getContainer()->get('coral.renderer');
+
+        $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_invalid_2.txt');
         $renderer->render($content);
     }
 
