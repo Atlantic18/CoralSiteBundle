@@ -2,28 +2,29 @@
 
 namespace Coral\SiteBundle\Service;
 
+use Coral\CoreBundle\Controller\JsonController;
+use Coral\CoreBundle\Exception\AuthenticationException;
+use Coral\CoreBundle\Exception\JsonException;
+use Coral\SiteBundle\Service\Page;
+use Coral\SiteBundle\Utility\Finder;
+use Coral\SiteBundle\Utility\PropertiesParser;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RequestContextAwareInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-
-use Coral\SiteBundle\Utility\Finder;
-use Coral\CoreBundle\Controller\JsonController;
-use Coral\CoreBundle\Exception\JsonException;
-use Coral\CoreBundle\Exception\AuthenticationException;
 
 class RequestFilter implements EventSubscriberInterface
 {
@@ -34,30 +35,29 @@ class RequestFilter implements EventSubscriberInterface
      */
     private $contentPath;
     /**
-     * Logger
-     *
      * @var LoggerInterface
      */
     private $logger;
     /**
-     * Redirection
-     *
      * @var Redirection
      */
     private $redirection;
     /**
-     * ParameterBag
-     *
      * @var ParameterBag
      */
     private $context;
+    /**
+     * @var Page
+     */
+    private $page;
 
-    public function __construct($contentPath, ParameterBag $context, LoggerInterface $logger = null, Redirection $redirection = null)
+    public function __construct($contentPath, ParameterBag $context, Page $page, LoggerInterface $logger = null, Redirection $redirection = null)
     {
         $this->logger      = $logger;
         $this->contentPath = $contentPath;
         $this->redirection = $redirection;
         $this->context     = $context;
+        $this->page        = $page;
     }
 
     /**
@@ -160,7 +160,15 @@ class RequestFilter implements EventSubscriberInterface
             $this->fillContext($request);
 
             $finder = self::getFinder($request, $this->contentPath);
-            if(false !== ($finder && $finder->getPropertiesPath()))
+            /**
+             * In case the Page is a placeholder do not set controller so Symfony
+             * can handle 404. Useful when mapping a Controller path to the same
+             * path as content.
+             */
+            if(
+                (false !== ($finder && $finder->getPropertiesPath())) &&
+                !$this->page->getNode()->getProperty('placeholder')
+            )
             {
                 if (null !== $this->logger)
                 {
@@ -182,7 +190,7 @@ class RequestFilter implements EventSubscriberInterface
                         'Unable to change Coral controller, already set, please change services configuration priority.'
                     );
                 }
-                $request->attributes->add(array('_controller' => 'CoralSiteBundle:Default:page'));
+                $request->attributes->add(array('_controller' => 'coral.controller:pageAction'));
             }
 
             if(null !== ($redirection = $this->redirection->getRedirect($request->getPathInfo())))

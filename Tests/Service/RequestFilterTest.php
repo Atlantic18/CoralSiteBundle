@@ -14,6 +14,15 @@ class RequestFilterTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
+    public function testPlaceholderController()
+    {
+        $client  = static::createClient();
+        $client->request('GET', '/placeholder-controller');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals("Successfull Controller", $client->getResponse()->getContent());
+    }
+
     public function testUnknown()
     {
         $client  = static::createClient();
