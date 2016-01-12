@@ -11,6 +11,7 @@
         <parameter key="coral.redirection.class">Coral\SiteBundle\Service\Redirection</parameter>
         <parameter key="coral.renderer.class">Coral\SiteBundle\Service\Renderer</parameter>
         <parameter key="coral.request_filter.class">Coral\SiteBundle\Service\RequestFilter</parameter>
+        <parameter key="coral.controller.class">Coral\SiteBundle\Controller\PageController</parameter>
     </parameters>
 
     <services>
@@ -29,6 +30,14 @@
         <service id="coral.context" class="Symfony\Component\DependencyInjection\ParameterBag\ParameterBag">
         </service>
 
+        <service id="coral.controller" class="%coral.controller.class%">
+            <argument type="service" id="templating"/>
+            <argument type="service" id="coral.page"/>
+            <argument type="service" id="coral.sitemap"/>
+            <argument type="service" id="coral.renderer"/>
+            <argument type="service" id="security.authorization_checker"/>
+        </service>
+
         <service id="coral.page" class="%coral.page.class%">
             <argument type="service" id="request_stack"/>
             <argument>%coral.content.path%</argument>
@@ -42,6 +51,7 @@
         <service id="coral.listener.route_resolve" class="%coral.request_filter.class%">
             <argument>%coral.content.path%</argument>
             <argument type="service" id="coral.context"/>
+            <argument type="service" id="coral.page"/>
             <argument type="service" id="logger"/>
             <argument type="service" id="coral.redirection"/>
 
