@@ -30,10 +30,11 @@ class Renderer
     /**
      * Render a file to include
      *
-     * @param  string $fileName File name to be rendered from include paths or a relative file name
+     * @param  string $fileName   File name to be rendered from include paths or a relative file name
+     * @param  array  $parameters Parameters from template
      * @return string rendered include
      */
-    private function renderIncludeForContent(Content $content, $fileName)
+    private function renderIncludeForContent(Content $content, $fileName, $parameters)
     {
         $directory       = dirname($fileName);
         $baseName        = basename($fileName);
@@ -61,7 +62,7 @@ class Renderer
             if(file_exists($fullPath))
             {
                 $type = pathinfo($fullPath, PATHINFO_EXTENSION);
-                return $this->render(new Content($type, substr($fullPath, strlen($realContentPath))));
+                return $this->render(new Content($type, substr($fullPath, strlen($realContentPath))), $parameters);
             }
 
             throw new \InvalidArgumentException("Include file [$fullPath] does not exist.");
@@ -83,10 +84,11 @@ class Renderer
     /**
      * Render Content via a filter
      *
-     * @param  Content $content Content to render
+     * @param  Content $content    Content to render
+     * @param  array   $parameters Parameters from template
      * @return string
      */
-    public function render(Content $content)
+    public function render(Content $content, $parameters)
     {
         if(!array_key_exists($content->getType(), $this->filters))
         {
@@ -96,14 +98,14 @@ class Renderer
             );
         }
 
-        $renderedContent = $this->filters[$content->getType()]->render($content);
+        $renderedContent = $this->filters[$content->getType()]->render($content, $parameters);
 
         if(preg_match_all('/\{\{\s*(include)\s+([a-z0-9\_\-\.\/]+)\s*\}\}/i', $renderedContent, $matches))
         {
             $matchesCount = count($matches[0]);
             for($i = 0; $i < $matchesCount; $i++)
             {
-                $includedContent = $this->renderIncludeForContent($content, $matches[2][$i]);
+                $includedContent = $this->renderIncludeForContent($content, $matches[2][$i], $parameters);
                 $renderedContent = str_replace($matches[0][$i], $includedContent, $renderedContent);
             }
         }

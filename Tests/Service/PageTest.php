@@ -135,7 +135,7 @@ class PageTest extends WebTestCase
 
         $this->assertEquals(
             '<p>Different footer pure html.</p> <p><strong>included</strong></p>',
-            trim($renderer->render($page->getArea('footer')->getContentByIndex(0)))
+            trim($renderer->render($page->getArea('footer')->getContentByIndex(0), array()))
         );
     }
 

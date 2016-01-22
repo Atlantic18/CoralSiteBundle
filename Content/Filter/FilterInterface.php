@@ -10,7 +10,8 @@ interface FilterInterface
      * Convert input Content to output
      *
      * @param  Content $content
+     * @param  array   $parameters from renderer
      * @return string
      */
-    public function render(Content $content);
+    public function render(Content $content, $parameters);
 }

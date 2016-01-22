@@ -142,6 +142,8 @@ class DefaultControllerTest extends WebTestCase
         $this->assertEquals('Page Test', $crawler->filter('.page_test > h3')->text());
 
         $this->assertEquals('Config Logger Mac', $crawler->filter('.main > h2')->text());
+
+        $this->assertEquals('foo = bar', $crawler->filter('.main > h4')->text());
     }
 
     public function testPageAuthenticated()

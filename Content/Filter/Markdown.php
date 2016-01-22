@@ -20,9 +20,10 @@ class Markdown extends AbstractContentFilter implements FilterInterface
      * Convert input Content to output
      *
      * @param  Content $content
+     * @param  array   $parameters from renderer
      * @return string
      */
-    public function render(Content $content)
+    public function render(Content $content, $parameters)
     {
         return $this->markdownParser->transformMarkdown($this->getFileContent($content));
     }

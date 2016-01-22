@@ -12,7 +12,7 @@
     </section>
 
     <h1>{{ page.node.name }}</h1>
-    {{ include('CoralSiteBundle:Default:area.html.twig', { 'name': 'main', 'page': page, 'renderer': renderer }) }}
+    {{ include('CoralSiteBundle:Default:area.html.twig', { 'name': 'main', 'page': page, 'renderer': renderer, 'param_name': 'foo' }) }}
 {% endblock %}
 
 {% block footer %}
