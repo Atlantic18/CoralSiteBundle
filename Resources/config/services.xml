@@ -6,7 +6,7 @@
 
     <parameters>
         <parameter key="coral.sitemap.class">Coral\SiteBundle\Service\Sitemap</parameter>
-        <parameter key="coral.site_cache.class">Doctrine\Common\Cache\PhpFileCache</parameter>
+        <parameter key="coral.site_cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
         <parameter key="coral.page.class">Coral\SiteBundle\Service\Page</parameter>
         <parameter key="coral.redirection.class">Coral\SiteBundle\Service\Redirection</parameter>
         <parameter key="coral.renderer.class">Coral\SiteBundle\Service\Renderer</parameter>
