@@ -62,11 +62,6 @@ class PageController
         {
             return new RedirectResponse($this->page->getNode()->getProperty('redirect'), 301);
         }
-        //Placeholder property = Node is for structure only without content
-        if($this->page->getNode()->hasProperty('placeholder'))
-        {
-            throw new NotFoundHttpException('Page not found exception. Node is a placeholder.');
-        }
 
         return $this->templating->renderResponse(
             $this->page->getNode()->getProperty('template', 'CoralSiteBundle:Default:page.html.twig'),

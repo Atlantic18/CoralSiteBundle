@@ -38,6 +38,14 @@ class RendererTest extends WebTestCase
         $renderer->render($content, array());
     }
 
+    /**
+     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
+     */
+    public function testMissingContentPath()
+    {
+        new \Coral\SiteBundle\Content\Filter\Passthru('invalid');
+    }
+
     public function testConnector()
     {
         $renderer = $this->getContainer()->get('coral.renderer');
@@ -62,9 +70,20 @@ class RendererTest extends WebTestCase
     {
         $renderer = $this->getContainer()->get('coral.renderer');
 
+        $this->getContainer()->get('coral.context')->set('foo_param', 'foo');
+
         $content = new Content('connect', '/_renderer_test_content/test_connector_with_local_twig_template.connect');
 
         $this->assertEquals('<h3>Config Logger</h3>foo:bar,foo2:bar2', trim($renderer->render($content, array())));
+    }
+
+    /**
+     * @expectedException Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException
+     */
+    public function testConnectorWithLocalTwigTemplateMissingFooParam()
+    {
+        $content = new Content('connect', '/_renderer_test_content/test_connector_with_local_twig_template.connect');
+        $this->getContainer()->get('coral.renderer')->render($content, array());
     }
 
     public function testTwig()

@@ -53,10 +53,12 @@ abstract class AbstractContentFilter
     {
         $text = @file_get_contents($this->contentPath . $content->getPath());
 
+        // @codeCoverageIgnoreStart
         if(null === $this->getContentPath())
         {
             throw new ConfigurationException('ContentPath is not set. Call setContentPath before reading a file content.');
         }
+        // @codeCoverageIgnoreEnd
 
         if(false === $text)
         {

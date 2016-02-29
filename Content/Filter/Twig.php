@@ -26,6 +26,7 @@ class Twig implements FilterInterface
      */
     public function render(Content $content, $parameters)
     {
+        $parameters['context'] = $this->context->all();
         return $this->twig->render('@coral' . $content->getPath(), $parameters);
     }
 }

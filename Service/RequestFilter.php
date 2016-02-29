@@ -127,6 +127,7 @@ class RequestFilter implements EventSubscriberInterface
         {
             return strtolower($request->headers->get('CF-IPCountry'));
         }
+        // @codeCoverageIgnoreStart
         if(is_callable('geoip_country_code_by_name'))
         {
             if($countryCode = @geoip_country_code_by_name($request->getClientIp()))
@@ -134,6 +135,7 @@ class RequestFilter implements EventSubscriberInterface
                 return strtolower($countryCode);
             }
         }
+        // @codeCoverageIgnoreEnd
 
 
         return 'unknown';
@@ -186,9 +188,11 @@ class RequestFilter implements EventSubscriberInterface
                      *   <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="100" />
                      * </service>
                      */
+                    // @codeCoverageIgnoreStart
                     throw new \Coral\SiteBundle\Exception\ConfigurationException(
                         'Unable to change Coral controller, already set, please change services configuration priority.'
                     );
+                    // @codeCoverageIgnoreEnd
                 }
                 $request->attributes->add(array('_controller' => 'coral.controller:pageAction'));
             }
