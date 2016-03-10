@@ -5,7 +5,7 @@
 
   {% if (not node.hasProperty('permission')) or (is_granted(node.getProperty('permission'))) %}
     <li{% if current_url == node.uri %} class="active"{% endif %}>
-      {% if node.hasProperty('placeholder') %}
+      {% if node.getProperty('placeholder', false) %}
         <strong>{{ node.name }}</strong>
       {% else %}
         <a href="{{ coral_path(node) }}">{{ node.name }}</a>

@@ -251,9 +251,20 @@ class Node
         }
         if(array_key_exists((string) $key, $this->properties))
         {
-            return $this->properties[$key];
+            $value = $this->properties[$key];
+
         }
-        return $this->properties['tree_' . $key];
+        else
+        {
+            $value = $this->properties['tree_' . $key];
+        }
+
+        $valueLow = strtolower($value);
+        if($valueLow == 'true' || $valueLow == 'false')
+        {
+            return ($valueLow == 'true');
+        }
+        return $value;
     }
 
     /**

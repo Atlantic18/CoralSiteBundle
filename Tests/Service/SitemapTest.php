@@ -98,7 +98,7 @@ class SitemapTest extends WebTestCase
         $this->assertFalse($buyNow->hasProperty('keywords'));
         $this->assertEquals('default', $buyNow->getProperty('keywords', 'default'));
         $this->assertFalse($buyNow->hasProperty('description'));
-        $this->assertCount(2, $buyNow->getAllProperties());
+        $this->assertCount(3, $buyNow->getAllProperties());
         $this->assertEquals('https://store.acme.com', $buyNow->getProperty('redirect'));
         $this->assertEquals('::default.html.twig', $buyNow->getProperty('template'));
         $this->assertEquals('::default.html.twig', $buyNow->getProperty('tree_template'));
