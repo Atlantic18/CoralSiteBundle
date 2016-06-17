@@ -80,7 +80,6 @@ class PageTest extends WebTestCase
 
     public function testDuplicateSetNodeByUri()
     {
-        // TODO still passes even without fix
         $this->createRequestStack('/other');
         $page = $this->getContainer()->get('coral.page');
         $this->assertTrue($page->hasArea('other'), 'Contact-us does not have other area');
