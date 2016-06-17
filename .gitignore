@@ -6,3 +6,4 @@ vendor
 phpunit.xml
 nbproject
 catalog.xml
+.idea

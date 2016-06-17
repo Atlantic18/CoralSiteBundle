@@ -78,6 +78,34 @@ class PageTest extends WebTestCase
         $this->assertEquals('/contact-us', $page->getNode()->getUri());
     }
 
+    public function testDuplicateSetNodeByUri()
+    {
+        // TODO does not fail without the fix
+        $this->createRequestStack('/invalid');
+        $page = $this->getContainer()->get('coral.page');
+        $page->setNodeByUri('/contact-us');
+
+        //only partial node is read
+        $this->assertTrue(null !== $page->getNode(), 'Node is fetched properly');
+        $this->assertTrue(null === $page->getNode()->parent());
+        $this->assertTrue(null === $page->getNode()->prev());
+        $this->assertTrue(null === $page->getNode()->next());
+        $this->assertFalse($page->getNode()->hasChildren());
+        $this->assertEquals('Contact us', $page->getNode()->getName());
+        $this->assertEquals('/contact-us', $page->getNode()->getUri());
+        $this->assertFalse($page->getNode()->hasProperty('keywords'));
+        $this->assertFalse($page->getNode()->hasProperty('description'));
+        $this->assertEquals('::contact.html.twig', $page->getNode()->getProperty('template'));
+        $this->assertEquals('::default.html.twig', $page->getNode()->getProperty('tree_template'));
+
+        $this->assertFalse($page->hasArea('main'), 'Contact-us doesn\'t have main area');
+        $this->assertTrue($page->hasArea('footer'), 'Contact-us has inherited footer area');
+        $this->assertTrue($page->getArea('footer') instanceof Area, 'Contact-us area is instanceof Area');
+        $this->assertEquals('footer', $page->getArea('footer')->getName(), 'Area name is properly set');
+        $this->assertTrue($page->getArea('footer')->isInherited(), 'Contact-us has inherited footer area');
+        $this->assertFalse($page->hasArea('foo'), 'Contact-us doesn\'t have foo area');
+    }
+
     public function testHomepagePage()
     {
         $this->createRequestStack('/');
