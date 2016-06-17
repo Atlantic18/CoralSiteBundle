@@ -78,6 +78,17 @@ class PageTest extends WebTestCase
         $this->assertEquals('/contact-us', $page->getNode()->getUri());
     }
 
+    public function testDuplicateSetNodeByUri()
+    {
+        $this->createRequestStack('/other');
+        $page = $this->getContainer()->get('coral.page');
+        $this->assertTrue($page->hasArea('other'), 'Contact-us does not have other area');
+        $page->setNodeByUri('/contact-us');
+        $this->assertFalse($page->hasArea('other'), 'Contact-us does not have other area');
+
+    }
+
+
     public function testHomepagePage()
     {
         $this->createRequestStack('/');

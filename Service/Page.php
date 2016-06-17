@@ -255,6 +255,7 @@ class Page
      */
     public function setNodeByUri($uri)
     {
+        $this->areas = null;
         $finder     = new Finder($this->contentPath . $uri);
         $this->node = $this->readNode($finder);
     }
