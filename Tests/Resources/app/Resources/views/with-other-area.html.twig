@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ page.node.name }}{% endblock %}
+
+{% block navigation %}
+    <ul>{{ render(controller('CoralSiteBundle:Default:menu', { 'max_level': 3, 'uri': page.node.uri })) }}</ul>
+{% endblock %}
+
+{% block main %}
+    <h1>{{ page.node.name }}</h1>
+    {{ include('CoralSiteBundle:Default:area.html.twig', { 'name': 'main', 'page': page, 'renderer': renderer }) }}
+
+    {{ include('CoralSiteBundle:Default:area.html.twig', { 'name': 'other', 'page': page, 'renderer': renderer }) }}
+{% endblock %}
+
+{% block footer %}
+    {{ include('CoralSiteBundle:Default:area.html.twig', { 'name': 'footer', 'page': page, 'renderer': renderer }) }}
+{% endblock %}

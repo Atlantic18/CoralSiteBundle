@@ -80,8 +80,8 @@ class PageTest extends WebTestCase
 
     public function testDuplicateSetNodeByUri()
     {
-        // TODO does not fail without the fix
-        $this->createRequestStack('/invalid');
+        // TODO still passes even without fix
+        $this->createRequestStack('/other');
         $page = $this->getContainer()->get('coral.page');
         $page->setNodeByUri('/contact-us');
 
@@ -98,6 +98,7 @@ class PageTest extends WebTestCase
         $this->assertEquals('::contact.html.twig', $page->getNode()->getProperty('template'));
         $this->assertEquals('::default.html.twig', $page->getNode()->getProperty('tree_template'));
 
+        $this->assertFalse($page->hasArea('other'), 'Contact-us does not have other area');
         $this->assertFalse($page->hasArea('main'), 'Contact-us doesn\'t have main area');
         $this->assertTrue($page->hasArea('footer'), 'Contact-us has inherited footer area');
         $this->assertTrue($page->getArea('footer') instanceof Area, 'Contact-us area is instanceof Area');
