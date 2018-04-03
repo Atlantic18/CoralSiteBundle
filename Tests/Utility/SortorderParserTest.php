@@ -5,7 +5,7 @@ namespace Coral\SiteBundle\Tests\Utility;
 use Coral\SiteBundle\Utility\Finder;
 use Coral\SiteBundle\Utility\SortorderParser;
 
-class SortorderParserTest extends \PHPUnit_Framework_TestCase
+class SortorderParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @expectedException InvalidArgumentException

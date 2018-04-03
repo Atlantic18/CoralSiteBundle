@@ -4,8 +4,9 @@ namespace Coral\SiteBundle\Tests\Utility;
 
 use Coral\SiteBundle\Utility\Finder;
 use Coral\SiteBundle\Utility\PropertiesParser;
+use PHPUnit\Framework\TestCase;
 
-class PropertiesParserTest extends \PHPUnit_Framework_TestCase
+class PropertiesParserTest extends TestCase
 {
     /**
      * @expectedException InvalidArgumentException

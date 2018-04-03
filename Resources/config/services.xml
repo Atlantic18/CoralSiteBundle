@@ -15,22 +15,22 @@
     </parameters>
 
     <services>
-        <service id="coral.site.cache" class="%coral.site_cache.class%">
+        <service id="coral.site.cache" class="%coral.site_cache.class%" public="true">
             <argument>%kernel.cache_dir%</argument>
             <call method="setNamespace">
                 <argument>coral_site</argument>
             </call>
         </service>
 
-        <service id="coral.sitemap" class="%coral.sitemap.class%">
+        <service id="coral.sitemap" class="%coral.sitemap.class%" public="true">
             <argument type="service" id="coral.site.cache"/>
             <argument>%coral.content.path%</argument>
         </service>
 
-        <service id="coral.context" class="Symfony\Component\DependencyInjection\ParameterBag\ParameterBag">
+        <service id="coral.context" class="Symfony\Component\DependencyInjection\ParameterBag\ParameterBag" public="true">
         </service>
 
-        <service id="coral.controller" class="%coral.controller.class%">
+        <service id="coral.controller" class="%coral.controller.class%" public="true">
             <argument type="service" id="templating"/>
             <argument type="service" id="coral.page"/>
             <argument type="service" id="coral.sitemap"/>
@@ -38,17 +38,17 @@
             <argument type="service" id="security.authorization_checker"/>
         </service>
 
-        <service id="coral.page" class="%coral.page.class%">
+        <service id="coral.page" class="%coral.page.class%" public="true">
             <argument type="service" id="request_stack"/>
             <argument>%coral.content.path%</argument>
         </service>
 
-        <service id="coral.redirection" class="%coral.redirection.class%">
+        <service id="coral.redirection" class="%coral.redirection.class%" public="true">
             <argument>%coral.config.path%</argument>
         </service>
 
         <!-- Inject content uris -->
-        <service id="coral.listener.route_resolve" class="%coral.request_filter.class%">
+        <service id="coral.listener.route_resolve" class="%coral.request_filter.class%" public="true">
             <argument>%coral.content.path%</argument>
             <argument type="service" id="coral.context"/>
             <argument type="service" id="coral.page"/>
@@ -59,11 +59,11 @@
         </service>
 
         <!-- Renderer configuration -->
-        <service id="coral.renderer" class="%coral.renderer.class%">
+        <service id="coral.renderer" class="%coral.renderer.class%" public="true">
             <argument>%coral.content.path%</argument>
         </service>
 
-        <service id="coral.filter.markdown" class="Coral\SiteBundle\Content\Filter\Markdown">
+        <service id="coral.filter.markdown" class="Coral\SiteBundle\Content\Filter\Markdown" public="true">
             <argument type="service" id="markdown.parser" />
             <argument>%coral.content.path%</argument>
 
@@ -71,21 +71,21 @@
             <tag name="coral.renderer.filter" type="md" />
         </service>
 
-        <service id="coral.filter.passthru" class="Coral\SiteBundle\Content\Filter\Passthru">
+        <service id="coral.filter.passthru" class="Coral\SiteBundle\Content\Filter\Passthru" public="true">
             <argument>%coral.content.path%</argument>
 
             <tag name="coral.renderer.filter" type="html" />
             <tag name="coral.renderer.filter" type="txt" />
         </service>
 
-        <service id="coral.filter.twig" class="Coral\SiteBundle\Content\Filter\Twig">
+        <service id="coral.filter.twig" class="Coral\SiteBundle\Content\Filter\Twig" public="true">
             <argument type="service" id="twig" />
             <argument type="service" id="coral.context"/>
 
             <tag name="coral.renderer.filter" type="twig" />
         </service>
 
-        <service id="coral.filter.connect" class="Coral\SiteBundle\Content\Filter\Connect">
+        <service id="coral.filter.connect" class="Coral\SiteBundle\Content\Filter\Connect" public="true">
             <argument type="service" id="coral.connector" />
             <argument type="service" id="twig" />
             <argument type="service" id="coral.context"/>
@@ -95,7 +95,7 @@
         </service>
 
         <!-- Twig extension -->
-        <service id="coral.twig.path_extension" class="Coral\SiteBundle\Twig\PathExtension">
+        <service id="coral.twig.path_extension" class="Coral\SiteBundle\Twig\PathExtension" public="true">
             <argument type="service" id="request_stack" />
 
             <tag name="twig.extension" />

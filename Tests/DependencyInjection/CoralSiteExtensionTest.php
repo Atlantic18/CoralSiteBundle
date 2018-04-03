@@ -10,8 +10,9 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use PHPUnit\Framework\TestCase;
 
-class CoralSiteExtensionTest extends \PHPUnit_Framework_TestCase
+class CoralSiteExtensionTest extends TestCase
 {
     /**
      * @dataProvider getFormats

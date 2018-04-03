@@ -23,6 +23,16 @@ Tests
 
 Test suites are part of the bundle and code is fully covered. You can find details at [travis-ci.org][2]
 
+Docker
+----------------------
+
+```
+docker build -t bundle_symfony:latest .
+docker run -v `pwd`:/app bundle_symfony composer update
+docker run -v `pwd`:/app bundle_symfony /app/vendor/bin/simple-phpunit install
+docker run -v `pwd`:/app bundle_symfony /app/vendor/bin/simple-phpunit -v
+```
+
 ![Travis-ci.org](https://travis-ci.org/Atlantic18/CoralSiteBundle.svg?branch=master)
 
 [1]: https://coral.atlantic18.com
