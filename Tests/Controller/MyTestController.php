@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MyTestController extends Controller
 {
     /**
-     * Configured via routing.php
+     * @Route("/placeholder-controller")
      */
     public function index()
     {

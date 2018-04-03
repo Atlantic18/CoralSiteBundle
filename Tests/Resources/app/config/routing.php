@@ -11,8 +11,8 @@ $locator    = new FileLocator();
 $aLoader    = new AnnotatedRouteControllerLoader(new AnnotationReader());
 
 $loader     = new AnnotationDirectoryLoader($locator, $aLoader);
+
 $collection = $loader->load(__DIR__ . '/../../../../Controller');
-$collection->add('placeholder_controller', new Route('/placeholder-controller', array(
-    '_controller' => [MyTestController::class, 'index']
-)));
+//Add MyTestController annotation
+$collection->add('placeholder_controller', $loader->load(__DIR__ . '/../../../Controller')->getIterator()->current());
 return $collection;
