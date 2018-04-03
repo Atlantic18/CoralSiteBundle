@@ -39,7 +39,7 @@ class PathExtension extends \Twig_Extension
         $path = $node->getUri();
         $scriptName = $request->getScriptName();
 
-        if(strpos($scriptName, '_') !== false)
+        if((strpos($scriptName, '_dev') !== false) || ((strpos($scriptName, '_test') !== false)))
         {
             return $scriptName . $path;
         }
