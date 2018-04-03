@@ -12,7 +12,7 @@ class MyTestController extends Controller
     /**
      * Configured via routing.php
      */
-    public function indexAction()
+    public function index()
     {
         return new Response("Successfull Controller");
     }
