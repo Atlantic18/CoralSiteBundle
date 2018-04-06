@@ -64,7 +64,7 @@ class PageController
         }
 
         return $this->templating->renderResponse(
-            $this->page->getNode()->getProperty('template', 'CoralSiteBundle:Default:page.html.twig'),
+            $this->page->getNode()->getProperty('template', '@CoralSite/Default/page.html.twig'),
             array(
                 'page'     => $this->page,
                 'renderer' => $this->renderer

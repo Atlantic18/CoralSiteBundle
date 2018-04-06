@@ -15,7 +15,7 @@ class DefaultController extends Controller
     public function menuAction($max_level, $uri = null, Request $request)
     {
         return $this->render(
-            'CoralSiteBundle:Default:menu.html.twig',
+            '@CoralSite/Default/menu.html.twig',
             array(
                 'parent'      => $this->get('coral.sitemap')->getRoot(),
                 'max_level'   => $max_level - 1,
