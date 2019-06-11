@@ -1,4 +1,4 @@
 Contact us
 
-template:::contact.html.twig
+template:contact.html.twig
 tree_permission:ROLE_USER

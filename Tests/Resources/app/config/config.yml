@@ -9,6 +9,7 @@ parameters:
 services:
     my_test_controller:
         class: Coral\SiteBundle\Tests\Controller\MyTestController
+        tags: ['controller.service_arguments']
     coral.connect.coral:
         class: Coral\CoreBundle\Service\Connector\CoralConnector
         arguments: ["@coral.connector.request", "%kernel.root_dir%/fixtures/coral_connect", "account", "apisecretkey"]
@@ -20,6 +21,7 @@ twig:
     strict_variables: "%kernel.debug%"
     paths:
         "%kernel.root_dir%/../fixtures/AcmeContent/content": coral
+        "%kernel.root_dir%/templates": ~
 
 coral_site:
     content_path: "%kernel.root_dir%/../fixtures/AcmeContent/content"
@@ -35,8 +37,6 @@ framework:
     validation:
         enabled: true
         enable_annotations: true
-    templating:
-        engines: ['twig']
     router:
         resource: "%kernel.root_dir%/config/routing.php"
     default_locale: "en"

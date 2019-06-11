@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page.node.name }}{% endblock %}
+
+{% block navigation %}
+    <ul>{{ render(controller('Coral\\SiteBundle\\Controller\\DefaultController::menuAction', { 'max_level': 3, 'uri': page.node.uri })) }}</ul>
+{% endblock %}
+
+{% block main %}
+    <section class="page_test">
+        <h3>Page Test</h3>
+    </section>
+
+    <h1>{{ page.node.name }}</h1>
+    {{ include('@CoralSite/Default/area.html.twig', { 'name': 'main', 'page': page, 'renderer': renderer, 'param_name': 'foo' }) }}
+{% endblock %}
+
+{% block footer %}
+    {{ include('@CoralSite/Default/area.html.twig', { 'name': 'footer', 'page': page, 'renderer': renderer }) }}
+{% endblock %}

@@ -53,8 +53,8 @@ class PageTest extends WebTestCase
         $this->assertEquals('/contact-us', $page->getNode()->getUri());
         $this->assertFalse($page->getNode()->hasProperty('keywords'));
         $this->assertFalse($page->getNode()->hasProperty('description'));
-        $this->assertEquals('::contact.html.twig', $page->getNode()->getProperty('template'));
-        $this->assertEquals('::default.html.twig', $page->getNode()->getProperty('tree_template'));
+        $this->assertEquals('contact.html.twig', $page->getNode()->getProperty('template'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('tree_template'));
 
         $this->assertFalse($page->hasArea('main'), 'Contact-us doesn\'t have main area');
         $this->assertTrue($page->hasArea('footer'), 'Contact-us has inherited footer area');
@@ -96,8 +96,8 @@ class PageTest extends WebTestCase
 
         $this->assertEquals('Homepage', $page->getNode()->getName());
         $this->assertEquals('/', $page->getNode()->getUri());
-        $this->assertEquals('::default.html.twig', $page->getNode()->getProperty('template'));
-        $this->assertEquals('::default.html.twig', $page->getNode()->getProperty('tree_template'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('template'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('tree_template'));
         $this->assertEquals('acme, project, default', $page->getNode()->getProperty('keywords'));
         $this->assertEquals('ACME: see for yourself', $page->getNode()->getProperty('description'));
 
@@ -129,8 +129,8 @@ class PageTest extends WebTestCase
         $this->assertEquals('/contact-us/location', $page->getNode()->getUri());
         $this->assertFalse($page->getNode()->hasProperty('keywords'));
         $this->assertEquals('Contact Us: where to find us', $page->getNode()->getProperty('description'));
-        $this->assertEquals('::default.html.twig', $page->getNode()->getProperty('template'));
-        $this->assertEquals('::default.html.twig', $page->getNode()->getProperty('tree_template'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('template'));
+        $this->assertEquals('default.html.twig', $page->getNode()->getProperty('tree_template'));
 
         $this->assertFalse($page->hasArea('main'), 'Location doesn\'t have main area');
         $this->assertTrue($page->hasArea('footer'), 'Location has footer area');

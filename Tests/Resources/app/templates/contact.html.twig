@@ -3,7 +3,7 @@
 {% block title %}{{ page.node.name }}{% endblock %}
 
 {% block navigation %}
-  <ul>{{ render(controller('Coral\SiteBundle\Controller\DefaultController::menuAction', { 'max_level': 3, 'uri': page.node.uri })) }}</ul>
+  <ul>{{ render(controller('Coral\\SiteBundle\\Controller\\DefaultController::menuAction', { 'max_level': 3, 'uri': page.node.uri })) }}</ul>
 {% endblock %}
 
 {% block main %}

@@ -31,7 +31,7 @@
         </service>
 
         <service id="coral.controller" class="%coral.controller.class%" public="true">
-            <argument type="service" id="templating"/>
+            <argument type="service" id="twig"/>
             <argument type="service" id="coral.page"/>
             <argument type="service" id="coral.sitemap"/>
             <argument type="service" id="coral.renderer"/>

@@ -1,23 +1,23 @@
-{% spaceless %}
-{% for i in 0..100 if parent.getChildByIndex(i) %}
+{% apply spaceless %}
+{% for i in 0..100 %}
+  {% if parent.getChildByIndex(i) %}
+    {% set node = parent.getChildByIndex(i) %}
 
-  {% set node = parent.getChildByIndex(i) %}
+    {% if (not node.hasProperty('permission')) or (is_granted(node.getProperty('permission'))) %}
+      <li{% if current_url == node.uri %} class="active"{% endif %}>
+        {% if node.getProperty('placeholder', false) %}
+          <strong>{{ node.name }}</strong>
+        {% else %}
+          <a href="{{ coral_path(node) }}">{{ node.name }}</a>
+        {% endif %}
+        {% if node.hasChildren() and (max_level > 0) %}
+          <ul>
+            {{ include('@CoralSite/Default/menu.html.twig', { 'parent': node, 'max_level': max_level - 1, 'current_url': current_url }) }}
+          </ul>
+        {% endif %}
 
-  {% if (not node.hasProperty('permission')) or (is_granted(node.getProperty('permission'))) %}
-    <li{% if current_url == node.uri %} class="active"{% endif %}>
-      {% if node.getProperty('placeholder', false) %}
-        <strong>{{ node.name }}</strong>
-      {% else %}
-        <a href="{{ coral_path(node) }}">{{ node.name }}</a>
-      {% endif %}
-      {% if node.hasChildren() and (max_level > 0) %}
-        <ul>
-          {{ include('CoralSiteBundle:Default:menu.html.twig', { 'parent': node, 'max_level': max_level - 1, 'current_url': current_url }) }}
-        </ul>
-      {% endif %}
-
-    </li>
+      </li>
+    {% endif %}
   {% endif %}
-
 {% endfor %}
-{% endspaceless %}
+{% endapply %}

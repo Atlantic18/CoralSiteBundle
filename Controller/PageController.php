@@ -5,6 +5,7 @@ namespace Coral\SiteBundle\Controller;
 use Coral\SiteBundle\Service\Page;
 use Coral\SiteBundle\Service\Renderer;
 use Coral\SiteBundle\Service\Sitemap;
+use Twig\Environment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -12,14 +13,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Templating\EngineInterface;
 
 class PageController
 {
     /**
-     * @var \Symfony\Component\Templating\EngineInterface
+     * @var \Twig\Environment
      */
-    private $templating;
+    private $twig;
     /**
      * @var \Coral\SiteBundle\Service\Page
      */
@@ -37,9 +37,9 @@ class PageController
      */
     private $authChecker;
 
-    public function __construct(EngineInterface $templating, Page $page, Sitemap $sitemap, Renderer $renderer, AuthorizationCheckerInterface $authChecker)
+    public function __construct(Environment $twig, Page $page, Sitemap $sitemap, Renderer $renderer, AuthorizationCheckerInterface $authChecker)
     {
-        $this->templating  = $templating;
+        $this->twig  = $twig;
         $this->page        = $page;
         $this->sitemap     = $sitemap;
         $this->renderer    = $renderer;
@@ -63,12 +63,12 @@ class PageController
             return new RedirectResponse($this->page->getNode()->getProperty('redirect'), 301);
         }
 
-        return $this->templating->renderResponse(
+        return new Response($this->twig->render(
             $this->page->getNode()->getProperty('template', '@CoralSite/Default/page.html.twig'),
             array(
                 'page'     => $this->page,
                 'renderer' => $this->renderer
             )
-        );
+        ));
     }
 }
