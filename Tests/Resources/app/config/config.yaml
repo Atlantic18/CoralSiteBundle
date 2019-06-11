@@ -1,5 +1,5 @@
 imports:
-    - { resource: security.yml }
+    - { resource: security.yaml }
 
 parameters:
     coral.site_cache.class: Doctrine\Common\Cache\ArrayCache
@@ -7,6 +7,15 @@ parameters:
     coral.connector.request.class: Coral\CoreBundle\Tests\Service\Request\RequestMockup
 
 services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+    default_controller:
+        class: Coral\SiteBundle\Controller\DefaultController
+        tags: ['controller.service_arguments']
+        bind:
+            $sitemap: '@coral.sitemap'
     my_test_controller:
         class: Coral\SiteBundle\Tests\Controller\MyTestController
         tags: ['controller.service_arguments']
@@ -27,6 +36,10 @@ coral_site:
     content_path: "%kernel.root_dir%/../fixtures/AcmeContent/content"
     config_path: "%kernel.root_dir%/../fixtures/AcmeContent/configuration"
 
+sensio_framework_extra:
+    router:
+        annotations: false
+
 framework:
     secret: test
     test: ~
@@ -37,9 +50,9 @@ framework:
     validation:
         enabled: true
         enable_annotations: true
-    router:
-        resource: "%kernel.root_dir%/config/routing.php"
     default_locale: "en"
+    router:
+        strict_requirements: ~
 
 monolog:
     handlers:

@@ -1,0 +1,9 @@
+test_controller:
+    path:        /placeholder-controller
+    controller:  my_test_controller::index
+    methods:     GET
+
+menu_controller:
+    path:        /menu/{max_level}
+    controller:  default_controller::menuAction
+    methods:     GET
