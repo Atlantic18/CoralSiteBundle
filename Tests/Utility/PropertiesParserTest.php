@@ -8,47 +8,42 @@ use PHPUnit\Framework\TestCase;
 
 class PropertiesParserTest extends TestCase
 {
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidFileException()
     {
+        $this->expectException('InvalidArgumentException');
+
         $finder = new Finder('invalid_filename');
         PropertiesParser::parse($finder);
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\PropertiesParserException
-     */
     public function testEmptyPropertiesException()
     {
+        $this->expectException('Coral\SiteBundle\Exception\PropertiesParserException');
+
         $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/empty');
         PropertiesParser::parse($finder);
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\PropertiesParserException
-     */
     public function testInvalidPropertiesException()
     {
+        $this->expectException('Coral\SiteBundle\Exception\PropertiesParserException');
+
         $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/invalid');
         PropertiesParser::parse($finder);
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\PropertiesParserException
-     */
     public function testInvalidPropertiesKeyException()
     {
+        $this->expectException('Coral\SiteBundle\Exception\PropertiesParserException');
+
         $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/invalid_key');
         PropertiesParser::parse($finder);
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\PropertiesParserException
-     */
     public function testInvalidPropertiesKeyValueException()
     {
+        $this->expectException('Coral\SiteBundle\Exception\PropertiesParserException');
+
         $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/properties/invalid_value');
         PropertiesParser::parse($finder);
     }

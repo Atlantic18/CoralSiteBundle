@@ -64,7 +64,8 @@ class RequestFilterTest extends WebTestCase
 
     public function testContextParams()
     {
-        $crawler = static::createClient()->request(
+        $client = static::createClient();
+        $crawler = $client->request(
             'GET',
             '/dynamic?param1=bar',
             array(),
@@ -78,7 +79,7 @@ class RequestFilterTest extends WebTestCase
         $this->assertEquals('request.os = mac', $crawler->filter('h4.os')->text());
         $this->assertEquals('request.country = nl', $crawler->filter('h4.country')->text());
 
-        $crawler = static::createClient()->request(
+        $crawler = $client->request(
             'GET',
             '/dynamic?param1=bar',
             array(),
@@ -89,7 +90,7 @@ class RequestFilterTest extends WebTestCase
         );
         $this->assertEquals('request.os = linux', $crawler->filter('h4.os')->text());
 
-        $crawler = static::createClient()->request(
+        $crawler = $client->request(
             'GET',
             '/dynamic?param1=bar',
             array(),

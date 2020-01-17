@@ -4,7 +4,7 @@ namespace Coral\SiteBundle\Content\Filter;
 
 use Coral\CoreBundle\Service\Connector;
 use Coral\CoreBundle\Utility\JsonParser;
-use Twig_Environment as Environment;
+use Twig\Environment as Environment;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Coral\SiteBundle\Content\Content;
 

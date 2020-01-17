@@ -7,3 +7,4 @@ phpunit.xml
 nbproject
 catalog.xml
 .idea
+.phpunit.result.cache

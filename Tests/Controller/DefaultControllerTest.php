@@ -155,7 +155,6 @@ class DefaultControllerTest extends WebTestCase
             $client->getResponse()->getStatusCode()
         );
 
-        $client  = static::createClient();
         $crawler = $client->request(
             'GET',
             '/contact-us',

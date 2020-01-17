@@ -7,20 +7,18 @@ use Coral\SiteBundle\Utility\SortorderParser;
 
 class SortorderParserTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidFileException()
     {
+        $this->expectException('InvalidArgumentException');
+
         $finder = new Finder('invalid_path');
         SortorderParser::parse($finder);
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\SortorderParserException
-     */
     public function testEmptySortorderException()
     {
+        $this->expectException('Coral\SiteBundle\Exception\SortorderParserException');
+
         $finder = new Finder(dirname(__FILE__) . '/../Resources/fixtures/sortorder/empty');
         SortorderParser::parse($finder);
     }

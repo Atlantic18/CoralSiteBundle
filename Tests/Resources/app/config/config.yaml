@@ -21,7 +21,7 @@ services:
         tags: ['controller.service_arguments']
     coral.connect.coral:
         class: Coral\CoreBundle\Service\Connector\CoralConnector
-        arguments: ["@coral.connector.request", "%kernel.root_dir%/fixtures/coral_connect", "account", "apisecretkey"]
+        arguments: ["@coral.connector.request", "%kernel.project_dir%/fixtures/coral_connect", "account", "apisecretkey"]
         tags:
             -  { name: coral.connector.service, service: "coral" }
 
@@ -29,12 +29,12 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     paths:
-        "%kernel.root_dir%/../fixtures/AcmeContent/content": coral
-        "%kernel.root_dir%/templates": ~
+        "%kernel.project_dir%/../fixtures/AcmeContent/content": coral
+        "%kernel.project_dir%/templates": ~
 
 coral_site:
-    content_path: "%kernel.root_dir%/../fixtures/AcmeContent/content"
-    config_path: "%kernel.root_dir%/../fixtures/AcmeContent/configuration"
+    content_path: "%kernel.project_dir%/../fixtures/AcmeContent/content"
+    config_path: "%kernel.project_dir%/../fixtures/AcmeContent/configuration"
 
 sensio_framework_extra:
     router:

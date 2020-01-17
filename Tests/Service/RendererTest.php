@@ -16,33 +16,30 @@ use Coral\CoreBundle\Test\WebTestCase;
 
 class RendererTest extends WebTestCase
 {
-    /**
-     * @expectedException Coral\SiteBundle\Exception\RenderException
-     */
     public function testInvalidType()
     {
+        $this->expectException('Coral\SiteBundle\Exception\RenderException');
+
         $renderer = $this->getContainer()->get('coral.renderer');
 
         $content = new Content('invalid', '_renderer_test_content/test_connector.connect');
         $renderer->render($content, array());
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\RenderException
-     */
     public function testInvalidFile()
     {
+        $this->expectException('Coral\SiteBundle\Exception\RenderException');
+
         $renderer = $this->getContainer()->get('coral.renderer');
 
         $content = new Content('md', 'invalid file name');
         $renderer->render($content, array());
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
-     */
     public function testMissingContentPath()
     {
+        $this->expectException('Coral\SiteBundle\Exception\ConfigurationException');
+
         new \Coral\SiteBundle\Content\Filter\Passthru('invalid');
     }
 
@@ -54,7 +51,7 @@ class RendererTest extends WebTestCase
 
         $content = new Content('connect', '_renderer_test_content/test_connector.connect');
 
-        $this->assertContains('Config Logger', trim($renderer->render($content, array())));
+        $this->assertStringContainsString('Config Logger', trim($renderer->render($content, array())));
     }
 
     public function testConnectorWithVariables()
@@ -77,11 +74,10 @@ class RendererTest extends WebTestCase
         $this->assertEquals('<h3>Config Logger</h3>foo:bar,foo2:bar2', trim($renderer->render($content, array())));
     }
 
-    /**
-     * @expectedException Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException
-     */
     public function testConnectorWithLocalTwigTemplateMissingFooParam()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException');
+
         $content = new Content('connect', '/_renderer_test_content/test_connector_with_local_twig_template.connect');
         $this->getContainer()->get('coral.renderer')->render($content, array());
     }
@@ -104,11 +100,10 @@ class RendererTest extends WebTestCase
         $this->assertEquals('foo = bar', trim($renderer->render($content, array('foo' => 'bar'))));
     }
 
-    /**
-     * @expectedException \Twig_Error_Runtime
-     */
     public function testConnectorMissingVariables()
     {
+        $this->expectException('Twig\Error\RuntimeError');
+
         $renderer = $this->getContainer()->get('coral.renderer');
 
         $content = new Content('connect', '/_renderer_test_content/test_connector_missing_variables.connect');
@@ -149,7 +144,7 @@ class RendererTest extends WebTestCase
 
         $content = new Content('markdown', '_renderer_test_content/test_markdown_flavored.markdown');
 
-        $this->assertContains('<pre><code class="ruby">', trim($renderer->render($content, array())));
+        $this->assertStringContainsString('<pre><code class="ruby">', trim($renderer->render($content, array())));
     }
 
     public function testHtml()
@@ -161,33 +156,30 @@ class RendererTest extends WebTestCase
         $this->assertEquals('<h2>Test</h2>', $renderer->render($content, array()));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testRenderIncludeInvalidOutside()
     {
+        $this->expectException('InvalidArgumentException');
+
         $renderer = $this->getContainer()->get('coral.renderer');
 
         $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_outside.txt');
         $renderer->render($content, array());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testRenderWithIncludeInvalid()
     {
+        $this->expectException('InvalidArgumentException');
+
         $renderer = $this->getContainer()->get('coral.renderer');
 
         $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_invalid.txt');
         $renderer->render($content, array());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testRenderWithIncludeInvalid2()
     {
+        $this->expectException('InvalidArgumentException');
+
         $renderer = $this->getContainer()->get('coral.renderer');
 
         $content = new Content('txt', '_renderer_test_content/test_renderer_with_include_invalid_2.txt');

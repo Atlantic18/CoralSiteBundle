@@ -129,11 +129,10 @@ class SitemapTest extends WebTestCase
         $this->assertEquals('Location', $root->getChildByIndex(2)->getChildByIndex(0)->getName());
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\SitemapException
-     */
     public function testMissingProperties()
     {
+        $this->expectException('Coral\SiteBundle\Exception\SitemapException');
+
         $sitemap = new Sitemap(
             $this->getContainer()->get('coral.site.cache'),
             dirname(__FILE__) . '/../Resources/fixtures/AcmeContent/invalid_parent'

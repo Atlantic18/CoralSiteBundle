@@ -16,35 +16,31 @@ use Coral\SiteBundle\Service\Redirection;
 
 class RedirectionTest extends WebTestCase
 {
-    /**
-     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
-     */
     public function testException()
     {
+        $this->expectException('Coral\SiteBundle\Exception\ConfigurationException');
+
         new Redirection('invalid_path');
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
-     */
     public function testEmptyFile()
     {
+        $this->expectException('Coral\SiteBundle\Exception\ConfigurationException');
+
         new Redirection(dirname(__FILE__) . '/../Resources/fixtures/redirection/empty');
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
-     */
     public function testMissingKey()
     {
+        $this->expectException('Coral\SiteBundle\Exception\ConfigurationException');
+
         new Redirection(dirname(__FILE__) . '/../Resources/fixtures/redirection/missing_key');
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\ConfigurationException
-     */
     public function testInvalidEntry()
     {
+        $this->expectException('Coral\SiteBundle\Exception\ConfigurationException');
+
         new Redirection(dirname(__FILE__) . '/../Resources/fixtures/redirection/invalid_entry');
     }
 

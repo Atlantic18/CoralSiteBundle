@@ -4,8 +4,10 @@ namespace Coral\SiteBundle\Twig;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Coral\SiteBundle\Content\Node;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class PathExtension extends \Twig_Extension
+class PathExtension extends AbstractExtension
 {
     /**
      * Request stack
@@ -25,7 +27,7 @@ class PathExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('coral_path', array($this, 'path')),
+            new TwigFunction('coral_path', array($this, 'path')),
         );
     }
 

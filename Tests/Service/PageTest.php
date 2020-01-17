@@ -28,11 +28,10 @@ class PageTest extends WebTestCase
         $this->getContainer()->set('request_stack', $stack);
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\SitemapException
-     */
     public function testInvalidUrl()
     {
+        $this->expectException('Coral\SiteBundle\Exception\SitemapException');
+
         $this->createRequestStack('/unknown');
         $page = $this->getContainer()->get('coral.page');
         $page->getNode();
@@ -106,9 +105,9 @@ class PageTest extends WebTestCase
         $this->assertFalse($page->getArea('main')->isInherited(), 'Homepage main is not inherited area');
         $this->assertTrue($page->getArea('main')->getContentByIndex(0) instanceof Content, 'Content is instanceof Content');
         $this->assertEquals('markdown', $page->getArea('main')->getContentByIndex(0)->getType(), 'Markdown content type properly read');
-        $this->assertContains('/.main/perex.markdown', $page->getArea('main')->getContentByIndex(0)->getPath(), 'Path is set');
+        $this->assertStringContainsString('/.main/perex.markdown', $page->getArea('main')->getContentByIndex(0)->getPath(), 'Path is set');
         $this->assertEquals('html', $page->getArea('main')->getContentByIndex(1)->getType(), 'HTML content type properly read');
-        $this->assertContains('/.main/main_story.html', $page->getArea('main')->getContentByIndex(1)->getPath(), 'Path is set');
+        $this->assertStringContainsString('/.main/main_story.html', $page->getArea('main')->getContentByIndex(1)->getPath(), 'Path is set');
         $this->assertTrue($page->getArea('main')->getContentByIndex(2) === null);
         $this->assertTrue($page->hasArea('footer'), 'Homepage has footer area');
         $this->assertFalse($page->getArea('footer')->isInherited(), 'Homepage doesn\'t have inherited footer area');
@@ -138,10 +137,10 @@ class PageTest extends WebTestCase
         $this->assertFalse($page->getArea('footer')->isEmpty(), 'Location footer area is not empty');
         $this->assertEquals('footer', $page->getArea('footer')->getName(), 'Area name is properly set');
         $this->assertEquals('html', $page->getArea('footer')->getContentByIndex(0)->getType(), 'HTML content type properly read');
-        $this->assertContains('/contact-us/location/.footer/footer.html', $page->getArea('footer')->getContentByIndex(0)->getPath(), 'Path is filled');
+        $this->assertStringContainsString('/contact-us/location/.footer/footer.html', $page->getArea('footer')->getContentByIndex(0)->getPath(), 'Path is filled');
         $this->assertTrue($page->hasArea('empty'), 'Location has empty area');
         $this->assertFalse($page->getArea('empty')->isEmpty(), 'Location empty area is really empty');
-        $this->assertContains('/contact-us/location/.empty/content.md', $page->getArea('empty')->getContentByIndex(0)->getPath(), 'Path is filled in empty area without sortorder');
+        $this->assertStringContainsString('/contact-us/location/.empty/content.md', $page->getArea('empty')->getContentByIndex(0)->getPath(), 'Path is filled in empty area without sortorder');
         $this->assertFalse($page->hasArea('foo'), 'Location doesn\'t have foo area');
 
         $this->assertEquals(
@@ -150,41 +149,37 @@ class PageTest extends WebTestCase
         );
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\PageException
-     */
     public function testInvalid()
     {
+        $this->expectException('Coral\SiteBundle\Exception\PageException');
+
         $this->createRequestStack('/invalid');
         $page = $this->getContainer()->get('coral.page');
         $page->getArea('main');
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\PageException
-     */
     public function testInvalidByUri()
     {
+        $this->expectException('Coral\SiteBundle\Exception\PageException');
+
         $page = $this->getContainer()->get('coral.page');
         $page->setNodeByUri('/invalid');
         $page->getArea('main');
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\PageException
-     */
     public function testInvalidArea()
     {
+        $this->expectException('Coral\SiteBundle\Exception\PageException');
+
         $this->createRequestStack('/invalid');
         $page = $this->getContainer()->get('coral.page');
         $page->getArea('invalid_area');
     }
 
-    /**
-     * @expectedException Coral\SiteBundle\Exception\SitemapException
-     */
     public function testInvalidParentValidChild()
     {
+        $this->expectException('Coral\SiteBundle\Exception\SitemapException');
+
         $this->createRequestStack('/invalid_parent/valid_child');
         $page = $this->getContainer()->get('coral.page');
         $page->getArea('invalid_area');
