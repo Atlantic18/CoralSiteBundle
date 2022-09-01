@@ -12,9 +12,9 @@
 namespace Coral\SiteBundle\Tests\Service;
 
 use Coral\SiteBundle\Content\Content;
-use Coral\CoreBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class RendererTest extends WebTestCase
+class RendererTest extends KernelTestCase
 {
     public function testInvalidType()
     {

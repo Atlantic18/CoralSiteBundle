@@ -157,7 +157,7 @@ class RequestFilter implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        if($event->isMasterRequest())
+        if($event->isMainRequest())
         {
             $this->fillContext($request);
 

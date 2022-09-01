@@ -13,7 +13,7 @@ namespace Coral\SiteBundle\Tests\Service;
 
 use Coral\SiteBundle\Service\Sitemap;
 use Coral\SiteBundle\Content\Node;
-use Coral\CoreBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SitemapTest extends WebTestCase
 {
@@ -110,11 +110,6 @@ class SitemapTest extends WebTestCase
     public function testCache()
     {
         $sitemap = $this->getContainer()->get('coral.sitemap');
-        //fill cache
-        $this->assertFalse($sitemap->isRootCached());
-        $sitemap->getRoot();
-        $this->assertTrue($sitemap->isRootCached());
-        //check cache is used
         $root = $sitemap->getRoot();
 
         $this->assertTrue($root instanceof Node);

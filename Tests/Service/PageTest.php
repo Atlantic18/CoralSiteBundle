@@ -16,9 +16,9 @@ use Coral\SiteBundle\Content\Node;
 use Coral\SiteBundle\Content\Area;
 use Coral\SiteBundle\Content\Content;
 use Coral\SiteBundle\Utility\Finder;
-use Coral\CoreBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class PageTest extends WebTestCase
+class PageTest extends KernelTestCase
 {
     private function createRequestStack($uri)
     {

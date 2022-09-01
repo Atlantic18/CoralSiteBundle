@@ -11,10 +11,10 @@
 
 namespace Coral\SiteBundle\Tests\Twig;
 
-use Coral\CoreBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Coral\SiteBundle\Content\Node;
 
-class PathExtensionTest extends WebTestCase
+class PathExtensionTest extends KernelTestCase
 {
     private function createRequestStack($scriptName)
     {

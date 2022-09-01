@@ -3,13 +3,13 @@
 namespace Coral\SiteBundle\Content\Filter;
 
 use Coral\SiteBundle\Content\Content;
-use Knp\Bundle\MarkdownBundle\MarkdownParserInterface;
+use Twig\Extra\Markdown\MarkdownInterface;
 
 class Markdown extends AbstractContentFilter implements FilterInterface
 {
     private $markdownParser;
 
-    function __construct(MarkdownParserInterface $markdownParser, $contentPath)
+    function __construct(MarkdownInterface $markdownParser, $contentPath)
     {
         $this->markdownParser = $markdownParser;
 
@@ -25,6 +25,6 @@ class Markdown extends AbstractContentFilter implements FilterInterface
      */
     public function render(Content $content, $parameters)
     {
-        return $this->markdownParser->transformMarkdown($this->getFileContent($content));
+        return $this->markdownParser->convert($this->getFileContent($content));
     }
 }

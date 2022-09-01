@@ -6,7 +6,8 @@
 
     <parameters>
         <parameter key="coral.sitemap.class">Coral\SiteBundle\Service\Sitemap</parameter>
-        <parameter key="coral.site_cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
+        <parameter key="coral.site_cache.class">Symfony\Component\Cache\Adapter\ArrayAdapter</parameter>
+        <parameter key="markdown.converter.class">Twig\Extra\Markdown\LeagueMarkdown</parameter>
         <parameter key="coral.page.class">Coral\SiteBundle\Service\Page</parameter>
         <parameter key="coral.redirection.class">Coral\SiteBundle\Service\Redirection</parameter>
         <parameter key="coral.renderer.class">Coral\SiteBundle\Service\Renderer</parameter>
@@ -16,10 +17,6 @@
 
     <services>
         <service id="coral.site.cache" class="%coral.site_cache.class%" public="true">
-            <argument>%kernel.cache_dir%</argument>
-            <call method="setNamespace">
-                <argument>coral_site</argument>
-            </call>
         </service>
 
         <service id="coral.sitemap" class="%coral.sitemap.class%" public="true">
@@ -61,6 +58,9 @@
         <!-- Renderer configuration -->
         <service id="coral.renderer" class="%coral.renderer.class%" public="true">
             <argument>%coral.content.path%</argument>
+        </service>
+
+        <service id="markdown.parser" class="%markdown.converter.class%" public="true">
         </service>
 
         <service id="coral.filter.markdown" class="Coral\SiteBundle\Content\Filter\Markdown" public="true">

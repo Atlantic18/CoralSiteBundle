@@ -5,6 +5,7 @@ composer.phar
 vendor
 phpunit.xml
 nbproject
+var
 catalog.xml
 .idea
 .phpunit.result.cache

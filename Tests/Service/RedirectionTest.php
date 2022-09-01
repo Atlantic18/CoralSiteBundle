@@ -11,10 +11,10 @@
 
 namespace Coral\SiteBundle\Tests\Service;
 
-use Coral\CoreBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Coral\SiteBundle\Service\Redirection;
 
-class RedirectionTest extends WebTestCase
+class RedirectionTest extends KernelTestCase
 {
     public function testException()
     {

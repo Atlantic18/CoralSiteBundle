@@ -6,7 +6,7 @@ use Coral\SiteBundle\Content\Node;
 use Coral\SiteBundle\Utility\PropertiesParser;
 use Coral\SiteBundle\Utility\SortorderParser;
 use Coral\SiteBundle\Utility\Finder;
-use Doctrine\Common\Cache\Cache;
+use Symfony\Contracts\Cache\CacheInterface as Cache;
 
 class Sitemap
 {
@@ -83,23 +83,8 @@ class Sitemap
     public function getRoot()
     {
         $cacheKey = 'coral.sitemap.nodes';
-        if(false === ($root = $this->cache->fetch($cacheKey)))
-        {
-            $root = $this->readNode($this->contentPath);
-
-            if(!$this->cache->save($cacheKey, $root))
-            {
-                // @codeCoverageIgnoreStart
-                throw new \Coral\SiteBundle\Exception\SitemapException("Unable to store into cache.");
-                // @codeCoverageIgnoreEnd
-            }
-        }
-
-        return $root;
-    }
-
-    public function isRootCached()
-    {
-        return $this->cache->contains('coral.sitemap.nodes');
+        return $this->cache->get($cacheKey, function() {
+            return $this->readNode($this->contentPath);
+        });
     }
 }
