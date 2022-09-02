@@ -9,6 +9,7 @@ class DefaultControllerTest extends WebTestCase
     public function testMenu()
     {
         $client  = static::createClient();
+        
         $crawler = $client->request('GET', '/menu/2');
 
         $this->assertEquals('<li>', substr($client->getResponse()->getContent(), 0, 4));
@@ -24,13 +25,8 @@ class DefaultControllerTest extends WebTestCase
     public function testMenuAuthenticated()
     {
         $client  = static::createClient();
-        $crawler = $client->request(
-            'GET',
-            '/menu/2',
-            array(),
-            array(),
-            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
-        );
+        $client->loginUser(new \Symfony\Component\Security\Core\User\InMemoryUser('user', 'userpass', [ 'ROLE_USER' ]));
+        $crawler = $client->request('GET', '/menu/2');
 
         $this->assertEquals('<li>', substr($client->getResponse()->getContent(), 0, 4));
         $this->assertEquals(4, $crawler->filter('body > li')->count());
@@ -43,13 +39,8 @@ class DefaultControllerTest extends WebTestCase
     public function testMenuLevel()
     {
         $client  = static::createClient();
-        $crawler = $client->request(
-            'GET',
-            '/menu/1',
-            array(),
-            array(),
-            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
-        );
+        $client->loginUser(new \Symfony\Component\Security\Core\User\InMemoryUser('user', 'userpass', [ 'ROLE_USER' ]));
+        $crawler = $client->request('GET', '/menu/1');
 
         $this->assertEquals('<li>', substr($client->getResponse()->getContent(), 0, 4));
         $this->assertEquals(4, $crawler->filter('body > li')->count());
@@ -61,15 +52,11 @@ class DefaultControllerTest extends WebTestCase
     public function testPage()
     {
         $client  = static::createClient();
-        $crawler = $client->request(
-            'GET',
-            '/contact-us/location',
-            array(),
-            array(),
-            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
-        );
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $client->loginUser(new \Symfony\Component\Security\Core\User\InMemoryUser('user', 'userpass', [ 'ROLE_USER' ]));
+        $crawler = $client->request('GET', '/contact-us/location');
 
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        
         $this->assertEquals(4, $crawler->filter('.navigation > ul > li')->count());
         $this->assertEquals(1, $crawler->filter('.navigation ul ul')->count());
         $this->assertEquals('Products', $crawler->filter('.navigation > ul > li:nth-child(1) > a')->text());
@@ -86,54 +73,35 @@ class DefaultControllerTest extends WebTestCase
     public function testPageWhichHasLinkProperty()
     {
         $client  = static::createClient();
-        $crawler = $client->request(
-            'GET',
-            '/buy-now',
-            array(),
-            array(),
-            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
-        );
+        $client->loginUser(new \Symfony\Component\Security\Core\User\InMemoryUser('user', 'userpass', [ 'ROLE_USER' ]));
+        $crawler = $client->request('GET', '/buy-now');
         $this->assertTrue($client->getResponse()->isRedirect('https://store.acme.com'));
     }
 
     public function testPageNotExist()
     {
         $client  = static::createClient();
-        $crawler = $client->request(
-            'GET',
-            '/nonexistent',
-            array(),
-            array(),
-            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
-        );
+        $client->loginUser(new \Symfony\Component\Security\Core\User\InMemoryUser('user', 'userpass', [ 'ROLE_USER' ]));
+        $crawler = $client->request('GET', '/nonexistent');
         $this->assertTrue($client->getResponse()->isNotFound());
     }
 
     public function testPageWhichIsPlaceholder()
     {
         $client  = static::createClient();
-        $crawler = $client->request(
-            'GET',
-            '/about-us',
-            array(),
-            array(),
-            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
-        );
+        $client->loginUser(new \Symfony\Component\Security\Core\User\InMemoryUser('user', 'userpass', [ 'ROLE_USER' ]));
+        $crawler = $client->request('GET', '/about-us');
         $this->assertTrue($client->getResponse()->isNotFound());
     }
 
     public function testConnectWithContext()
     {
         $client  = static::createClient();
-        $crawler = $client->request(
-            'GET',
-            '/products?param1=published',
-            array(),
-            array(),
-            array(
+        $crawler = $client->request('GET', '/products?param1=published', [], [],
+            [
                 'HTTP_CF-IPCountry' => 'cs',
                 'HTTP_USER_AGENT'   => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.7 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.7',
-            )
+            ]
         );
         $this->assertTrue($client->getResponse()->isSuccessful());
 
@@ -155,13 +123,8 @@ class DefaultControllerTest extends WebTestCase
             $client->getResponse()->getStatusCode()
         );
 
-        $crawler = $client->request(
-            'GET',
-            '/contact-us',
-            array(),
-            array(),
-            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
-        );
+        $client->loginUser(new \Symfony\Component\Security\Core\User\InMemoryUser('user', 'userpass', [ 'ROLE_USER' ]));
+        $crawler = $client->request('GET', '/contact-us');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 }

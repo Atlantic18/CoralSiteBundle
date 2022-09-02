@@ -18,6 +18,8 @@ services:
     my_test_controller:
         class: Coral\SiteBundle\Tests\Controller\MyTestController
         tags: ['controller.service_arguments']
+    session.handler.mock:
+        class: Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory 
     coral.connect.coral:
         class: Coral\CoreBundle\Service\Connector\CoralConnector
         arguments: ["@coral.connector.request", "%kernel.project_dir%/fixtures/coral_connect", "account", "apisecretkey"]
@@ -41,9 +43,10 @@ sensio_framework_extra:
 
 framework:
     secret: test
+    http_method_override: true
     test: ~
     session:
-        handler_id: session.handler.native_file
+        storage_factory_id: session.handler.mock
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
     form:            true
     csrf_protection: true

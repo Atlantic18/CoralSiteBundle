@@ -194,7 +194,7 @@ class RequestFilter implements EventSubscriberInterface
                     );
                     // @codeCoverageIgnoreEnd
                 }
-                $request->attributes->add(array('_controller' => 'coral.controller:pageAction'));
+                $request->attributes->add(array('_controller' => 'coral.controller::pageAction'));
             }
 
             if(null !== ($redirection = $this->redirection->getRedirect($request->getPathInfo())))

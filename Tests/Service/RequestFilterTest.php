@@ -51,13 +51,8 @@ class RequestFilterTest extends WebTestCase
     public function testContactUs()
     {
         $client  = static::createClient();
-        $client->request(
-            'GET',
-            '/contact-us',
-            array(),
-            array(),
-            array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'userpass')
-        );
+        $client->loginUser(new \Symfony\Component\Security\Core\User\InMemoryUser('user', 'userpass', [ 'ROLE_USER' ]));
+        $client->request('GET', '/contact-us');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
