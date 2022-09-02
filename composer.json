@@ -35,9 +35,6 @@
     "autoload": {
         "psr-0": { 
             "Coral\\SiteBundle": ""
-        },
-        "psr-4": {
-            "League\\CommonMark\\": "src"
         }
     },
     "target-dir": "Coral/SiteBundle"
