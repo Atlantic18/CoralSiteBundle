@@ -7,7 +7,6 @@
     <parameters>
         <parameter key="coral.sitemap.class">Coral\SiteBundle\Service\Sitemap</parameter>
         <parameter key="coral.site_cache.class">Symfony\Component\Cache\Adapter\ArrayAdapter</parameter>
-        <parameter key="markdown.converter.class">Twig\Extra\Markdown\LeagueMarkdown</parameter>
         <parameter key="coral.page.class">Coral\SiteBundle\Service\Page</parameter>
         <parameter key="coral.redirection.class">Coral\SiteBundle\Service\Redirection</parameter>
         <parameter key="coral.renderer.class">Coral\SiteBundle\Service\Renderer</parameter>
@@ -60,7 +59,11 @@
             <argument>%coral.content.path%</argument>
         </service>
 
-        <service id="markdown.parser" class="%markdown.converter.class%" public="true">
+        <service id="markdown.converter" class="League\CommonMark\GithubFlavoredMarkdownConverter">
+        </service>
+
+        <service id="markdown.parser" class="Twig\Extra\Markdown\LeagueMarkdown" public="true">
+            <argument type="service" id="markdown.converter"/>
         </service>
 
         <service id="coral.filter.markdown" class="Coral\SiteBundle\Content\Filter\Markdown" public="true">

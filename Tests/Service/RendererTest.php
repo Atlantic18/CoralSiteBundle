@@ -143,8 +143,7 @@ class RendererTest extends KernelTestCase
         $renderer = $this->getContainer()->get('coral.renderer');
 
         $content = new Content('markdown', '_renderer_test_content/test_markdown_flavored.markdown');
-
-        $this->assertStringContainsString('<pre><code class="ruby">', trim($renderer->render($content, array())));
+        $this->assertStringContainsString('<pre><code class="language-ruby">', trim($renderer->render($content, array())));
     }
 
     public function testHtml()
