@@ -28,8 +28,10 @@ Docker
 
 ```
 docker build -t bundle_symfony:latest .
-docker run -v `pwd`:/app bundle_symfony composer update
-docker run -v `pwd`:/app bundle_symfony php vendor/bin/phpunit
+docker run --rm -v `pwd`:/app bundle_symfony chmod -R 777 /app/vendor
+docker run --rm -v `pwd`:/app bundle_symfony composer update
+
+docker run --rm -v `pwd`:/app bundle_symfony php vendor/bin/phpunit -v
 ```
 
 ![Travis-ci.org](https://travis-ci.org/Atlantic18/CoralSiteBundle.svg?branch=master)
